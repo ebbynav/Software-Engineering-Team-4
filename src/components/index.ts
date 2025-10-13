@@ -25,3 +25,4 @@ export { Loader, Skeleton } from './loaders/Loader';
 // Other Components
 export { Avatar } from './Avatar';
 export { SearchBar } from './SearchBar';
+export { BottomSheet } from './BottomSheet';

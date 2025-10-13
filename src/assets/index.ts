@@ -8,14 +8,18 @@
  * TODO: Connect to asset optimization pipeline for production builds
  */
 
-// Images
-export * from './images';
+// TODO: Uncomment when assets are added
+// export * from './images';
 
-// Lottie Animations
-export * from './lottie';
+// TODO: Uncomment when Lottie animations are added
+// export * from './lottie';
 
-// Fonts
-export * from './fonts';
+// TODO: Uncomment when custom fonts are loaded
+// export * from './fonts';
 
-// Mock Data
-export * from './mocks';
+// TODO: Uncomment when mock data is added
+// export * from './mocks';
+
+export const assets = {
+  // Will be populated with actual asset references
+};

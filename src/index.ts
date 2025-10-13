@@ -12,7 +12,7 @@
 export * from './types';
 export * from './components';
 export * from './screens';
-export * from './navigation';
+export { RootNavigator, MainTabs } from './navigation';
 export * from './contexts';
 export * from './hooks';
 export * from './services';

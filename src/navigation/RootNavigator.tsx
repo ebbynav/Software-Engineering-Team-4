@@ -4,25 +4,38 @@
  * @inputs Authentication state, onboarding completion status
  * @outputs Appropriate navigation stack (Onboarding, Auth, or Main)
  *
- * TODO: Add deep linking configuration for shared routes
+ * Deep Linking Patterns:
+ * - waytrove://route/:routeId - Opens route details
+ * - waytrove://news/:newsId - Opens news article
+ * - waytrove://safety/:guideId - Opens safety guide
+ * - waytrove://profile/:userId - Opens user profile
+ *
  * TODO: Implement navigation state persistence for better UX
  * TODO: Add loading screens with skeleton layouts
  * TODO: Add error boundaries for navigation failures
  */
 
 import React from 'react';
-import { View, ActivityIndicator } from 'react-native';
+import { View, ActivityIndicator, Platform } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { useThemeColors } from '../contexts';
 import { useAuth } from '../contexts/auth/AuthContext';
-import OnboardingScreen from '../screens/OnboardingScreen';
-import LoginScreen from '../screens/LoginScreen';
-import HomeScreen from '../screens/HomeScreen';
-import { ThemeDemoScreen } from '../screens';
+import type { RootStackParamList } from './types';
 
-const Stack = createStackNavigator();
+// Import screens
+import {
+  OnboardingScreen,
+  LoginScreen,
+  ThemeDemoScreen,
+  RouteDetailsScreen,
+  SettingsScreen,
+} from '../screens';
 
+// Import navigators
+import MainTabs from './MainTabs';
+
+const Stack = createStackNavigator<RootStackParamList>();
 export default function RootNavigator() {
   const colors = useThemeColors();
   const { isLoggedIn, hasSeenOnboarding, isLoading } = useAuth();
@@ -67,6 +80,19 @@ export default function RootNavigator() {
           notification: colors.error,
         },
       }}
+      linking={{
+        prefixes: ['waytrove://', 'https://waytrove.com'],
+        config: {
+          screens: {
+            Onboarding: 'onboarding',
+            Auth: 'auth',
+            Main: 'main',
+            RouteDetails: 'route/:routeId',
+            Settings: 'settings',
+            ThemeDemo: 'theme-demo',
+          },
+        },
+      }}
     >
       <Stack.Navigator
         initialRouteName={getInitialStack()}
@@ -75,40 +101,61 @@ export default function RootNavigator() {
           cardStyle: { backgroundColor: colors.background },
         }}
       >
-        {/* Onboarding Stack */}
+        {/* Onboarding Stack - Only shown on first launch */}
         {!hasSeenOnboarding && (
           <Stack.Screen
             name="Onboarding"
             component={OnboardingScreen}
             options={{
               animationTypeForReplace: 'push',
+              gestureEnabled: false, // Prevent swipe back
             }}
           />
         )}
 
-        {/* Authentication Stack */}
+        {/* Authentication Stack - Shown when not logged in */}
         {!isLoggedIn && hasSeenOnboarding && (
           <Stack.Screen
             name="Auth"
             component={LoginScreen}
             options={{
               animationTypeForReplace: 'push',
+              gestureEnabled: false, // Prevent swipe back
             }}
           />
         )}
 
-        {/* Main App Stack */}
+        {/* Main App Stack - Shown when logged in */}
         {isLoggedIn && (
           <>
             <Stack.Screen
               name="Main"
-              component={HomeScreen}
+              component={MainTabs}
               options={{
                 animationTypeForReplace: 'push',
               }}
             />
 
-            {/* Additional screens accessible when logged in */}
+            {/* Modal Screens - Accessible from anywhere in the app */}
+            <Stack.Screen
+              name="RouteDetails"
+              component={RouteDetailsScreen}
+              options={{
+                presentation: Platform.OS === 'ios' ? 'modal' : 'card',
+                headerShown: false,
+              }}
+            />
+
+            <Stack.Screen
+              name="Settings"
+              component={SettingsScreen}
+              options={{
+                presentation: Platform.OS === 'ios' ? 'modal' : 'card',
+                headerShown: false,
+              }}
+            />
+
+            {/* Theme Demo - Development only */}
             <Stack.Screen
               name="ThemeDemo"
               component={ThemeDemoScreen}
@@ -117,6 +164,7 @@ export default function RootNavigator() {
                 headerShown: true,
                 headerStyle: { backgroundColor: colors.card },
                 headerTintColor: colors.textPrimary,
+                presentation: Platform.OS === 'ios' ? 'modal' : 'card',
               }}
             />
           </>

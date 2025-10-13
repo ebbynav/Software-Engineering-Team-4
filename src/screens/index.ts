@@ -21,4 +21,6 @@ export { default as ProfileScreen } from './ProfileScreen';
 
 // Modal/Detail Screens
 export { default as RouteDetailsScreen } from './RouteDetailsScreen';
+export { default as NewsDetailsScreen } from './NewsDetailsScreen';
+export { default as SafeRouteScreen } from './SafeRouteScreen';
 export { default as SettingsScreen } from './SettingsScreen';

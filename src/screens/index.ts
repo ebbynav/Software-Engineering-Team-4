@@ -10,6 +10,9 @@
  * TODO: Ensure screens support safe area handling and theme switching
  */
 
+// Demo and Development Screens
+export { default as ThemeDemoScreen } from './ThemeDemoScreen';
+
 // Placeholder exports - will be populated as screens are created
 // export { default as OnboardingScreen } from './OnboardingScreen';
 // export { default as LoginScreen } from './LoginScreen';
@@ -17,8 +20,3 @@
 // export { default as HomeScreen } from './HomeScreen';
 // export { default as SearchScreen } from './SearchScreen';
 // export { default as ProfileScreen } from './ProfileScreen';
-
-// Temporary export to make this a module
-export const screens = {
-  // Will be populated with actual screens
-};

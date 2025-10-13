@@ -10,14 +10,12 @@
  * TODO: Follow iOS 17/26 design language (soft gradients, rounded edges, minimal shadows)
  */
 
+// Theme Components
+export { ThemeToggle } from './ThemeToggle';
+
 // Placeholder exports - will be populated as components are created
 // export { default as Button } from './Button';
 // export { default as Card } from './Card';
 // export { default as Input } from './Input';
 // export { default as Avatar } from './Avatar';
 // export { default as Badge } from './Badge';
-
-// Temporary export to make this a module
-export const components = {
-  // Will be populated with actual components
-};

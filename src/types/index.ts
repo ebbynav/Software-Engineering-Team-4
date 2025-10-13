@@ -230,19 +230,6 @@ export interface RegisterData {
   password: string;
 }
 
-// Theme Types
-export type Theme = 'light' | 'dark';
-
-export interface ThemeColors {
-  primary: string;
-  secondary: string;
-  accent: string;
-  background: string;
-  card: string;
-  textPrimary: string;
-  textSecondary: string;
-}
-
 // Utility Types
 export type LoadingState = 'idle' | 'loading' | 'success' | 'error';
 

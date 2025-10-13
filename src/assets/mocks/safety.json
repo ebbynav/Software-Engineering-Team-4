@@ -1,0 +1,390 @@
+[
+  {
+    "id": "safety-1",
+    "location": {
+      "lat": 37.7749,
+      "lng": -122.4194,
+      "address": "Downtown San Francisco",
+      "neighborhood": "Financial District"
+    },
+    "safetyScore": 88,
+    "crimeStats": {
+      "totalIncidents": 42,
+      "violent": 3,
+      "property": 28,
+      "other": 11
+    },
+    "period": "last_30_days",
+    "lightingQuality": "excellent",
+    "footTraffic": "high",
+    "securityCameras": 45,
+    "policeStations": [
+      {
+        "name": "Central Police Station",
+        "distance": 0.3,
+        "address": "766 Vallejo St"
+      }
+    ],
+    "emergencyServices": [
+      {
+        "type": "hospital",
+        "name": "UCSF Medical Center",
+        "distance": 1.2
+      }
+    ],
+    "alerts": [],
+    "lastUpdated": "2025-10-13T06:00:00Z"
+  },
+  {
+    "id": "safety-2",
+    "location": {
+      "lat": 37.7599,
+      "lng": -122.4148,
+      "address": "Mission District",
+      "neighborhood": "Mission"
+    },
+    "safetyScore": 72,
+    "crimeStats": {
+      "totalIncidents": 89,
+      "violent": 12,
+      "property": 58,
+      "other": 19
+    },
+    "period": "last_30_days",
+    "lightingQuality": "good",
+    "footTraffic": "high",
+    "securityCameras": 28,
+    "policeStations": [
+      {
+        "name": "Mission Police Station",
+        "distance": 0.5,
+        "address": "630 Valencia St"
+      }
+    ],
+    "emergencyServices": [
+      {
+        "type": "hospital",
+        "name": "SF General Hospital",
+        "distance": 0.8
+      }
+    ],
+    "alerts": [
+      {
+        "type": "advisory",
+        "message": "Increased police patrols on 24th Street corridor",
+        "severity": "low",
+        "issuedAt": "2025-10-10T12:00:00Z"
+      }
+    ],
+    "lastUpdated": "2025-10-13T06:00:00Z"
+  },
+  {
+    "id": "safety-3",
+    "location": {
+      "lat": 37.7833,
+      "lng": -122.4167,
+      "address": "Haight-Ashbury",
+      "neighborhood": "Haight-Ashbury"
+    },
+    "safetyScore": 75,
+    "crimeStats": {
+      "totalIncidents": 65,
+      "violent": 8,
+      "property": 43,
+      "other": 14
+    },
+    "period": "last_30_days",
+    "lightingQuality": "good",
+    "footTraffic": "moderate",
+    "securityCameras": 18,
+    "policeStations": [
+      {
+        "name": "Park Police Station",
+        "distance": 0.7,
+        "address": "1899 Waller St"
+      }
+    ],
+    "emergencyServices": [
+      {
+        "type": "hospital",
+        "name": "Kaiser Permanente SF",
+        "distance": 1.5
+      }
+    ],
+    "alerts": [],
+    "lastUpdated": "2025-10-13T06:00:00Z"
+  },
+  {
+    "id": "safety-4",
+    "location": {
+      "lat": 37.7955,
+      "lng": -122.4028,
+      "address": "Embarcadero",
+      "neighborhood": "Embarcadero"
+    },
+    "safetyScore": 92,
+    "crimeStats": {
+      "totalIncidents": 25,
+      "violent": 1,
+      "property": 18,
+      "other": 6
+    },
+    "period": "last_30_days",
+    "lightingQuality": "excellent",
+    "footTraffic": "very_high",
+    "securityCameras": 67,
+    "policeStations": [
+      {
+        "name": "Central Police Station",
+        "distance": 0.8,
+        "address": "766 Vallejo St"
+      }
+    ],
+    "emergencyServices": [
+      {
+        "type": "hospital",
+        "name": "Chinese Hospital",
+        "distance": 0.6
+      }
+    ],
+    "alerts": [],
+    "lastUpdated": "2025-10-13T06:00:00Z"
+  },
+  {
+    "id": "safety-5",
+    "location": {
+      "lat": 37.7831,
+      "lng": -122.5092,
+      "address": "Lands End",
+      "neighborhood": "Outer Richmond"
+    },
+    "safetyScore": 78,
+    "crimeStats": {
+      "totalIncidents": 8,
+      "violent": 0,
+      "property": 5,
+      "other": 3
+    },
+    "period": "last_30_days",
+    "lightingQuality": "fair",
+    "footTraffic": "low",
+    "securityCameras": 4,
+    "policeStations": [
+      {
+        "name": "Richmond Police Station",
+        "distance": 2.1,
+        "address": "461 6th Ave"
+      }
+    ],
+    "emergencyServices": [
+      {
+        "type": "hospital",
+        "name": "Kaiser SF Medical Center",
+        "distance": 3.2
+      }
+    ],
+    "alerts": [
+      {
+        "type": "warning",
+        "message": "Trail closures due to cliff erosion. Stay on marked paths.",
+        "severity": "medium",
+        "issuedAt": "2025-10-08T08:00:00Z"
+      }
+    ],
+    "lastUpdated": "2025-10-13T06:00:00Z"
+  },
+  {
+    "id": "safety-6",
+    "location": {
+      "lat": 37.785,
+      "lng": -122.4083,
+      "address": "Tenderloin",
+      "neighborhood": "Tenderloin"
+    },
+    "safetyScore": 58,
+    "crimeStats": {
+      "totalIncidents": 156,
+      "violent": 28,
+      "property": 98,
+      "other": 30
+    },
+    "period": "last_30_days",
+    "lightingQuality": "good",
+    "footTraffic": "high",
+    "securityCameras": 52,
+    "policeStations": [
+      {
+        "name": "Tenderloin Police Station",
+        "distance": 0.2,
+        "address": "301 Eddy St"
+      }
+    ],
+    "emergencyServices": [
+      {
+        "type": "hospital",
+        "name": "Saint Francis Memorial Hospital",
+        "distance": 0.4
+      }
+    ],
+    "alerts": [
+      {
+        "type": "advisory",
+        "message": "Enhanced safety patrols active. New community resource centers open.",
+        "severity": "low",
+        "issuedAt": "2025-10-11T09:00:00Z"
+      }
+    ],
+    "lastUpdated": "2025-10-13T06:00:00Z"
+  },
+  {
+    "id": "safety-7",
+    "location": {
+      "lat": 37.808,
+      "lng": -122.4177,
+      "address": "Fisherman's Wharf",
+      "neighborhood": "Fisherman's Wharf"
+    },
+    "safetyScore": 90,
+    "crimeStats": {
+      "totalIncidents": 31,
+      "violent": 2,
+      "property": 24,
+      "other": 5
+    },
+    "period": "last_30_days",
+    "lightingQuality": "excellent",
+    "footTraffic": "very_high",
+    "securityCameras": 89,
+    "policeStations": [
+      {
+        "name": "Northern Police Station",
+        "distance": 0.6,
+        "address": "1125 Fillmore St"
+      }
+    ],
+    "emergencyServices": [
+      {
+        "type": "hospital",
+        "name": "Chinese Hospital",
+        "distance": 1.1
+      }
+    ],
+    "alerts": [],
+    "lastUpdated": "2025-10-13T06:00:00Z"
+  },
+  {
+    "id": "safety-8",
+    "location": {
+      "lat": 37.7544,
+      "lng": -122.4477,
+      "address": "Twin Peaks",
+      "neighborhood": "Twin Peaks"
+    },
+    "safetyScore": 82,
+    "crimeStats": {
+      "totalIncidents": 12,
+      "violent": 1,
+      "property": 9,
+      "other": 2
+    },
+    "period": "last_30_days",
+    "lightingQuality": "fair",
+    "footTraffic": "moderate",
+    "securityCameras": 6,
+    "policeStations": [
+      {
+        "name": "Ingleside Police Station",
+        "distance": 1.8,
+        "address": "1 Sgt John V Young Ln"
+      }
+    ],
+    "emergencyServices": [
+      {
+        "type": "hospital",
+        "name": "UCSF Medical Center",
+        "distance": 2.3
+      }
+    ],
+    "alerts": [
+      {
+        "type": "weather",
+        "message": "High winds expected at summit. Use caution on exposed areas.",
+        "severity": "low",
+        "issuedAt": "2025-10-12T18:00:00Z"
+      }
+    ],
+    "lastUpdated": "2025-10-13T06:00:00Z"
+  },
+  {
+    "id": "safety-9",
+    "location": {
+      "lat": 37.7694,
+      "lng": -122.4862,
+      "address": "Golden Gate Park",
+      "neighborhood": "Golden Gate Park"
+    },
+    "safetyScore": 85,
+    "crimeStats": {
+      "totalIncidents": 18,
+      "violent": 1,
+      "property": 13,
+      "other": 4
+    },
+    "period": "last_30_days",
+    "lightingQuality": "good",
+    "footTraffic": "high",
+    "securityCameras": 34,
+    "policeStations": [
+      {
+        "name": "Park Police Station",
+        "distance": 0.9,
+        "address": "1899 Waller St"
+      }
+    ],
+    "emergencyServices": [
+      {
+        "type": "hospital",
+        "name": "Kaiser SF Medical Center",
+        "distance": 1.4
+      }
+    ],
+    "alerts": [],
+    "lastUpdated": "2025-10-13T06:00:00Z"
+  },
+  {
+    "id": "safety-10",
+    "location": {
+      "lat": 37.7102,
+      "lng": -122.478,
+      "address": "Outer Richmond",
+      "neighborhood": "Outer Richmond"
+    },
+    "safetyScore": 86,
+    "crimeStats": {
+      "totalIncidents": 21,
+      "violent": 2,
+      "property": 15,
+      "other": 4
+    },
+    "period": "last_30_days",
+    "lightingQuality": "good",
+    "footTraffic": "moderate",
+    "securityCameras": 15,
+    "policeStations": [
+      {
+        "name": "Richmond Police Station",
+        "distance": 1.2,
+        "address": "461 6th Ave"
+      }
+    ],
+    "emergencyServices": [
+      {
+        "type": "hospital",
+        "name": "Kaiser SF Medical Center",
+        "distance": 2.8
+      }
+    ],
+    "alerts": [],
+    "lastUpdated": "2025-10-13T06:00:00Z"
+  }
+]

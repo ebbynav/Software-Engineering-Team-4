@@ -1,0 +1,299 @@
+[
+  {
+    "id": "route-1",
+    "title": "Golden Gate Promenade Walk",
+    "description": "Scenic waterfront walk from Fort Point to the Golden Gate Bridge with stunning bay views and historical landmarks.",
+    "city": "San Francisco",
+    "category": "Scenic",
+    "imageUrl": "https://picsum.photos/800/400?random=1",
+    "distanceMeters": 5200,
+    "durationMinutes": 65,
+    "elevationGain": 45,
+    "difficulty": "Easy",
+    "safetyScore": 92,
+    "tags": ["waterfront", "bridge-views", "dog-friendly", "paved"],
+    "geojson": null,
+    "polyline": "gfqeFnkbjVqAaBcBmBoCwC",
+    "startPoint": {
+      "lat": 37.8102,
+      "lng": -122.478,
+      "address": "Fort Point, San Francisco, CA"
+    },
+    "endPoint": {
+      "lat": 37.8199,
+      "lng": -122.4783,
+      "address": "Golden Gate Bridge Vista Point"
+    },
+    "waypoints": [
+      {
+        "id": "wp-1",
+        "name": "Fort Point",
+        "lat": 37.8102,
+        "lng": -122.478,
+        "description": "Historic Civil War-era fortress",
+        "icon": "🏰"
+      },
+      {
+        "id": "wp-2",
+        "name": "Crissy Field",
+        "lat": 37.805,
+        "lng": -122.465,
+        "description": "Former airfield, now a popular park",
+        "icon": "🌳"
+      },
+      {
+        "id": "wp-3",
+        "name": "Warming Hut",
+        "lat": 37.8072,
+        "lng": -122.475,
+        "description": "Café and bookstore",
+        "icon": "☕"
+      }
+    ],
+    "likes": 1245,
+    "completions": 3890,
+    "reviews": 428,
+    "averageRating": 4.7,
+    "createdBy": "user-admin",
+    "createdAt": "2024-01-15T10:30:00Z",
+    "updatedAt": "2025-10-01T14:22:00Z",
+    "isPublic": true,
+    "isFeatured": true
+  },
+  {
+    "id": "route-2",
+    "title": "Lands End Coastal Trail",
+    "description": "Dramatic cliffs and ocean views on this iconic San Francisco coastal hike through Lands End.",
+    "city": "San Francisco",
+    "category": "Nature",
+    "imageUrl": "https://picsum.photos/800/400?random=2",
+    "distanceMeters": 2900,
+    "durationMinutes": 45,
+    "elevationGain": 120,
+    "difficulty": "Moderate",
+    "safetyScore": 78,
+    "tags": ["coastal", "ocean-views", "hiking", "historic-sites"],
+    "geojson": null,
+    "polyline": "kbpeFfhcjVsBwBoC_DmAqA",
+    "startPoint": {
+      "lat": 37.7831,
+      "lng": -122.5092,
+      "address": "Lands End Lookout, San Francisco, CA"
+    },
+    "endPoint": {
+      "lat": 37.7883,
+      "lng": -122.5006,
+      "address": "China Beach"
+    },
+    "waypoints": [
+      {
+        "id": "wp-4",
+        "name": "Lands End Lookout",
+        "lat": 37.7831,
+        "lng": -122.5092,
+        "description": "Visitor center with café",
+        "icon": "🏛️"
+      },
+      {
+        "id": "wp-5",
+        "name": "Sutro Baths Ruins",
+        "lat": 37.7805,
+        "lng": -122.5133,
+        "description": "Remains of historic public bathhouse",
+        "icon": "🏚️"
+      },
+      {
+        "id": "wp-6",
+        "name": "Eagles Point Overlook",
+        "lat": 37.7857,
+        "lng": -122.5065,
+        "description": "Panoramic ocean views",
+        "icon": "🦅"
+      }
+    ],
+    "likes": 987,
+    "completions": 2341,
+    "reviews": 312,
+    "averageRating": 4.5,
+    "createdBy": "user-123",
+    "createdAt": "2024-02-20T09:15:00Z",
+    "updatedAt": "2025-09-28T11:45:00Z",
+    "isPublic": true,
+    "isFeatured": true
+  },
+  {
+    "id": "route-3",
+    "title": "Mission Murals Art Walk",
+    "description": "Self-guided tour of the Mission District's famous street art and murals, with stops at local cafés.",
+    "city": "San Francisco",
+    "category": "Urban",
+    "imageUrl": "https://picsum.photos/800/400?random=3",
+    "distanceMeters": 3600,
+    "durationMinutes": 90,
+    "elevationGain": 25,
+    "difficulty": "Easy",
+    "safetyScore": 85,
+    "tags": ["street-art", "culture", "food", "photography"],
+    "geojson": null,
+    "polyline": "ggpeFjvbjVkBiCoCwDqBeB",
+    "startPoint": {
+      "lat": 37.7599,
+      "lng": -122.4148,
+      "address": "24th Street BART Station"
+    },
+    "endPoint": {
+      "lat": 37.7577,
+      "lng": -122.4102,
+      "address": "Balmy Alley"
+    },
+    "waypoints": [
+      {
+        "id": "wp-7",
+        "name": "24th Street Murals",
+        "lat": 37.7527,
+        "lng": -122.4184,
+        "description": "Colorful murals along 24th Street",
+        "icon": "🎨"
+      },
+      {
+        "id": "wp-8",
+        "name": "Clarion Alley",
+        "lat": 37.7551,
+        "lng": -122.4154,
+        "description": "Ever-changing street art gallery",
+        "icon": "🖼️"
+      },
+      {
+        "id": "wp-9",
+        "name": "Women's Building",
+        "lat": 37.7555,
+        "lng": -122.4192,
+        "description": "MaestraPeace mural",
+        "icon": "🏢"
+      }
+    ],
+    "likes": 756,
+    "completions": 1842,
+    "reviews": 201,
+    "averageRating": 4.8,
+    "createdBy": "user-456",
+    "createdAt": "2024-03-10T13:20:00Z",
+    "updatedAt": "2025-10-05T16:30:00Z",
+    "isPublic": true,
+    "isFeatured": false
+  },
+  {
+    "id": "route-4",
+    "title": "Twin Peaks Summit Loop",
+    "description": "Short but steep climb to Twin Peaks for 360-degree views of San Francisco and the Bay Area.",
+    "city": "San Francisco",
+    "category": "Parks",
+    "imageUrl": "https://picsum.photos/800/400?random=4",
+    "distanceMeters": 1800,
+    "durationMinutes": 30,
+    "elevationGain": 180,
+    "difficulty": "Hard",
+    "safetyScore": 72,
+    "tags": ["viewpoint", "summit", "photography", "sunset"],
+    "geojson": null,
+    "polyline": "kfpeFnxbjVoBkCqDmE",
+    "startPoint": {
+      "lat": 37.7544,
+      "lng": -122.4477,
+      "address": "Twin Peaks Boulevard Parking"
+    },
+    "endPoint": {
+      "lat": 37.7544,
+      "lng": -122.4477,
+      "address": "Twin Peaks Boulevard Parking"
+    },
+    "waypoints": [
+      {
+        "id": "wp-10",
+        "name": "North Peak",
+        "lat": 37.7544,
+        "lng": -122.447,
+        "description": "922 feet elevation",
+        "icon": "⛰️"
+      },
+      {
+        "id": "wp-11",
+        "name": "South Peak",
+        "lat": 37.7531,
+        "lng": -122.4474,
+        "description": "904 feet elevation",
+        "icon": "🏔️"
+      }
+    ],
+    "likes": 1123,
+    "completions": 2890,
+    "reviews": 389,
+    "averageRating": 4.6,
+    "createdBy": "user-789",
+    "createdAt": "2024-04-05T08:45:00Z",
+    "updatedAt": "2025-10-08T09:15:00Z",
+    "isPublic": true,
+    "isFeatured": true
+  },
+  {
+    "id": "route-5",
+    "title": "Embarcadero Waterfront Stroll",
+    "description": "Easy walk along the Embarcadero from the Ferry Building to Fisherman's Wharf with bay views.",
+    "city": "San Francisco",
+    "category": "Scenic",
+    "imageUrl": "https://picsum.photos/800/400?random=5",
+    "distanceMeters": 4200,
+    "durationMinutes": 55,
+    "elevationGain": 15,
+    "difficulty": "Easy",
+    "safetyScore": 95,
+    "tags": ["waterfront", "paved", "wheelchair-accessible", "family-friendly"],
+    "geojson": null,
+    "polyline": "efpeFvkbjVuBwBaDcDkCmC",
+    "startPoint": {
+      "lat": 37.7956,
+      "lng": -122.3935,
+      "address": "Ferry Building Marketplace"
+    },
+    "endPoint": {
+      "lat": 37.808,
+      "lng": -122.4177,
+      "address": "Fisherman's Wharf"
+    },
+    "waypoints": [
+      {
+        "id": "wp-12",
+        "name": "Ferry Building",
+        "lat": 37.7956,
+        "lng": -122.3935,
+        "description": "Historic marketplace",
+        "icon": "🏛️"
+      },
+      {
+        "id": "wp-13",
+        "name": "Pier 7",
+        "lat": 37.801,
+        "lng": -122.398,
+        "description": "Popular photo spot",
+        "icon": "📸"
+      },
+      {
+        "id": "wp-14",
+        "name": "Pier 39",
+        "lat": 37.8087,
+        "lng": -122.4098,
+        "description": "Sea lions and shopping",
+        "icon": "🦭"
+      }
+    ],
+    "likes": 892,
+    "completions": 4567,
+    "reviews": 523,
+    "averageRating": 4.4,
+    "createdBy": "user-admin",
+    "createdAt": "2024-05-12T11:00:00Z",
+    "updatedAt": "2025-10-10T13:20:00Z",
+    "isPublic": true,
+    "isFeatured": false
+  }
+]

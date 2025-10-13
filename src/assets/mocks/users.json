@@ -1,0 +1,202 @@
+[
+  {
+    "id": "user-1",
+    "email": "demo@waytrove.com",
+    "username": "demo_user",
+    "fullName": "Demo User",
+    "avatar": "https://i.pravatar.cc/150?img=1",
+    "phoneNumber": "+1-415-555-0123",
+    "bio": "Urban explorer and photography enthusiast. Love discovering hidden gems in SF!",
+    "location": {
+      "city": "San Francisco",
+      "state": "California",
+      "country": "USA"
+    },
+    "safetyPreferences": {
+      "shareLocation": true,
+      "emergencyContacts": ["+1-415-555-0199", "+1-415-555-0200"]
+    },
+    "createdAt": "2024-01-10T08:00:00Z",
+    "updatedAt": "2025-10-12T15:30:00Z"
+  },
+  {
+    "id": "user-2",
+    "email": "sarah.walker@example.com",
+    "username": "sarah_walks",
+    "fullName": "Sarah Walker",
+    "avatar": "https://i.pravatar.cc/150?img=5",
+    "phoneNumber": "+1-415-555-0145",
+    "bio": "Marathon runner turned casual walker. Exploring SF one route at a time.",
+    "location": {
+      "city": "San Francisco",
+      "state": "California",
+      "country": "USA"
+    },
+    "safetyPreferences": {
+      "shareLocation": true,
+      "emergencyContacts": ["+1-415-555-0201"]
+    },
+    "createdAt": "2024-02-18T10:15:00Z",
+    "updatedAt": "2025-10-11T09:45:00Z"
+  },
+  {
+    "id": "user-3",
+    "email": "mike.chen@example.com",
+    "username": "mike_adventures",
+    "fullName": "Mike Chen",
+    "avatar": "https://i.pravatar.cc/150?img=12",
+    "phoneNumber": "+1-415-555-0167",
+    "bio": "Dog dad to two golden retrievers. Always looking for pet-friendly routes!",
+    "location": {
+      "city": "San Francisco",
+      "state": "California",
+      "country": "USA"
+    },
+    "safetyPreferences": {
+      "shareLocation": false,
+      "emergencyContacts": []
+    },
+    "createdAt": "2024-03-22T14:20:00Z",
+    "updatedAt": "2025-10-10T11:20:00Z"
+  },
+  {
+    "id": "user-4",
+    "email": "jessica.park@example.com",
+    "username": "jess_explorer",
+    "fullName": "Jessica Park",
+    "avatar": "https://i.pravatar.cc/150?img=20",
+    "phoneNumber": "+1-415-555-0189",
+    "bio": "History buff and architecture nerd. Fascinated by SF's Victorian homes.",
+    "location": {
+      "city": "San Francisco",
+      "state": "California",
+      "country": "USA"
+    },
+    "safetyPreferences": {
+      "shareLocation": true,
+      "emergencyContacts": ["+1-415-555-0202", "+1-415-555-0203"]
+    },
+    "createdAt": "2024-04-15T16:30:00Z",
+    "updatedAt": "2025-10-09T13:10:00Z"
+  },
+  {
+    "id": "user-5",
+    "email": "alex.rivera@example.com",
+    "username": "alex_trails",
+    "fullName": "Alex Rivera",
+    "avatar": "https://i.pravatar.cc/150?img=33",
+    "phoneNumber": "+1-415-555-0212",
+    "bio": "Nature photographer | Sunset chaser | Coffee addict ☕",
+    "location": {
+      "city": "Oakland",
+      "state": "California",
+      "country": "USA"
+    },
+    "safetyPreferences": {
+      "shareLocation": true,
+      "emergencyContacts": ["+1-510-555-0100"]
+    },
+    "createdAt": "2024-05-08T09:00:00Z",
+    "updatedAt": "2025-10-08T17:25:00Z"
+  },
+  {
+    "id": "user-admin",
+    "email": "admin@waytrove.com",
+    "username": "waytrove_admin",
+    "fullName": "WayTrove Admin",
+    "avatar": "https://i.pravatar.cc/150?img=68",
+    "phoneNumber": "+1-415-555-0100",
+    "bio": "Official WayTrove account. Curating the best walking experiences in the Bay Area.",
+    "location": {
+      "city": "San Francisco",
+      "state": "California",
+      "country": "USA"
+    },
+    "safetyPreferences": {
+      "shareLocation": false,
+      "emergencyContacts": []
+    },
+    "createdAt": "2023-12-01T00:00:00Z",
+    "updatedAt": "2025-10-13T08:00:00Z"
+  },
+  {
+    "id": "user-123",
+    "email": "david.kim@example.com",
+    "username": "davidk_sf",
+    "fullName": "David Kim",
+    "avatar": "https://i.pravatar.cc/150?img=14",
+    "phoneNumber": "+1-415-555-0134",
+    "bio": "Fitness enthusiast and trail creator. Sharing my favorite SF walks!",
+    "location": {
+      "city": "San Francisco",
+      "state": "California",
+      "country": "USA"
+    },
+    "safetyPreferences": {
+      "shareLocation": true,
+      "emergencyContacts": ["+1-415-555-0204"]
+    },
+    "createdAt": "2024-01-25T11:45:00Z",
+    "updatedAt": "2025-10-07T14:55:00Z"
+  },
+  {
+    "id": "user-456",
+    "email": "maria.santos@example.com",
+    "username": "maria_art",
+    "fullName": "Maria Santos",
+    "avatar": "https://i.pravatar.cc/150?img=47",
+    "phoneNumber": "+1-415-555-0156",
+    "bio": "Mission District resident | Street art curator | Community activist",
+    "location": {
+      "city": "San Francisco",
+      "state": "California",
+      "country": "USA"
+    },
+    "safetyPreferences": {
+      "shareLocation": false,
+      "emergencyContacts": ["+1-415-555-0205"]
+    },
+    "createdAt": "2024-02-14T13:30:00Z",
+    "updatedAt": "2025-10-06T10:40:00Z"
+  },
+  {
+    "id": "user-789",
+    "email": "robert.johnson@example.com",
+    "username": "rob_peaks",
+    "fullName": "Robert Johnson",
+    "avatar": "https://i.pravatar.cc/150?img=52",
+    "phoneNumber": "+1-415-555-0178",
+    "bio": "Mountain climber scaling SF's urban peaks. Twin Peaks is my favorite!",
+    "location": {
+      "city": "San Francisco",
+      "state": "California",
+      "country": "USA"
+    },
+    "safetyPreferences": {
+      "shareLocation": true,
+      "emergencyContacts": ["+1-415-555-0206", "+1-415-555-0207"]
+    },
+    "createdAt": "2024-03-30T15:10:00Z",
+    "updatedAt": "2025-10-05T16:15:00Z"
+  },
+  {
+    "id": "user-321",
+    "email": "linda.brown@example.com",
+    "username": "linda_waterfront",
+    "fullName": "Linda Brown",
+    "avatar": "https://i.pravatar.cc/150?img=29",
+    "phoneNumber": "+1-415-555-0191",
+    "bio": "Retired teacher enjoying SF's waterfront. Love the Ferry Building!",
+    "location": {
+      "city": "San Francisco",
+      "state": "California",
+      "country": "USA"
+    },
+    "safetyPreferences": {
+      "shareLocation": true,
+      "emergencyContacts": ["+1-415-555-0208"]
+    },
+    "createdAt": "2024-06-12T08:25:00Z",
+    "updatedAt": "2025-10-04T12:30:00Z"
+  }
+]

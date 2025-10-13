@@ -1,16 +1,20 @@
 /**
- * @fileoverview Home Screen - Main dashboard for authenticated users
- * @purpose Displays travel recommendations, user content, and navigation options
- * @inputs User preferences, location data, travel history
- * @outputs Personalized travel content and navigation to other features
+ * HomeScreen - Main Dashboard
  *
- * TODO: Implement destination recommendations based on user interests
- * TODO: Add location-based suggestions using device GPS
- * TODO: Integrate with Django backend for personalized content
- * TODO: Add pull-to-refresh functionality for fresh content
+ * LAYOUT:
+ * - Header: Avatar (left) + ThemeToggle (right)
+ * - Greeting: "Good [morning/afternoon/evening], {user.name}"
+ * - SearchBar
+ * - Featured Routes Carousel (horizontal scroll)
+ * - 2x2 Feature Grid (Explore, Safety, News, Profile)
+ *
+ * INTERACTIONS:
+ * - Pull-to-refresh refreshes mock feed
+ * - Tapping featured route navigates to RouteDetails
+ * - Feature cards navigate to respective screens
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -18,165 +22,220 @@ import {
   SafeAreaView,
   TouchableOpacity,
   ScrollView,
+  RefreshControl,
+  Dimensions,
+  Image,
 } from 'react-native';
-import { useThemeColors } from '../contexts';
+import { useThemeColors } from '../contexts/theme/ThemeContext';
 import { useAuth } from '../contexts/auth/AuthContext';
-import { ThemeToggle } from '../components';
+import { ThemeToggle, SearchBar, Avatar } from '../components';
+import { FEATURED_ROUTES, MOCK_USER } from '../data/mockData';
+
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
+const CARD_WIDTH = SCREEN_WIDTH - 48;
+
+const getGreeting = (): string => {
+  const hour = new Date().getHours();
+  if (hour < 12) return 'Good morning';
+  if (hour < 18) return 'Good afternoon';
+  return 'Good evening';
+};
 
 export default function HomeScreen() {
   const colors = useThemeColors();
-  const { user, signOut } = useAuth();
+  const { user } = useAuth();
 
-  const handleSignOut = async () => {
-    try {
-      await signOut();
-    } catch (error) {
-      console.error('Sign out failed:', error);
-    }
+  const [refreshing, setRefreshing] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [routes, setRoutes] = useState(FEATURED_ROUTES);
+
+  const onRefresh = async () => {
+    setRefreshing(true);
+    // Simulate API call
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    setRoutes([...FEATURED_ROUTES]);
+    setRefreshing(false);
+  };
+
+  const handleRoutePress = (routeId: string) => {
+    console.log('Navigate to route:', routeId);
+    // TODO: navigation.navigate('RouteDetails', { routeId });
+  };
+
+  const handleSearch = () => {
+    console.log('Search for:', searchQuery);
+    // TODO: Navigate to Explore with search query
+  };
+
+  const formatDistance = (meters: number): string => {
+    const km = meters / 1000;
+    return km < 1 ? `${meters}m` : `${km.toFixed(1)}km`;
+  };
+
+  const formatDuration = (minutes: number): string => {
+    const hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+    if (hours === 0) return `${mins}min`;
+    return mins === 0 ? `${hours}h` : `${hours}h ${mins}min`;
   };
 
   return (
     <SafeAreaView
       style={[styles.container, { backgroundColor: colors.background }]}
     >
-      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={styles.content}
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            tintColor={colors.primary}
+          />
+        }
+      >
         {/* Header */}
         <View style={styles.header}>
-          <View>
-            <Text style={[styles.greeting, { color: colors.textSecondary }]}>
-              Welcome back,
-            </Text>
-            <Text style={[styles.userName, { color: colors.textPrimary }]}>
-              {user?.name || 'Traveler'}
-            </Text>
-          </View>
-
-          <View style={styles.headerActions}>
-            <ThemeToggle size={20} />
-          </View>
+          <Avatar src={MOCK_USER.avatar} initials={MOCK_USER.name} size={44} />
+          <ThemeToggle size={20} />
         </View>
 
-        {/* User Info Card */}
-        <View
-          style={[
-            styles.userCard,
-            { backgroundColor: colors.card, borderColor: colors.border },
-          ]}
-        >
-          <View style={styles.userInfo}>
-            <View style={[styles.avatar, { backgroundColor: colors.primary }]}>
-              <Text style={[styles.avatarText, { color: colors.textInverse }]}>
-                {user?.name?.charAt(0)?.toUpperCase() || 'U'}
-              </Text>
-            </View>
-            <View style={styles.userDetails}>
-              <Text
-                style={[styles.userNameCard, { color: colors.textPrimary }]}
-              >
-                {user?.name}
-              </Text>
-              <Text style={[styles.userEmail, { color: colors.textSecondary }]}>
-                {user?.email}
-              </Text>
-              {user?.city && (
-                <Text style={[styles.userCity, { color: colors.textTertiary }]}>
-                  📍 {user.city}
-                </Text>
-              )}
-            </View>
-          </View>
-
-          {user?.interests && user.interests.length > 0 && (
-            <View style={styles.interests}>
-              <Text
-                style={[styles.interestsLabel, { color: colors.textSecondary }]}
-              >
-                Interests:
-              </Text>
-              <View style={styles.interestTags}>
-                {user.interests.map((interest, index) => (
-                  <View
-                    key={index}
-                    style={[
-                      styles.interestTag,
-                      { backgroundColor: colors.primaryLight },
-                    ]}
-                  >
-                    <Text
-                      style={[
-                        styles.interestText,
-                        { color: colors.textInverse },
-                      ]}
-                    >
-                      {interest}
-                    </Text>
-                  </View>
-                ))}
-              </View>
-            </View>
-          )}
-        </View>
-
-        {/* Quick Actions */}
-        <View style={styles.quickActions}>
-          <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
-            Quick Actions
+        {/* Greeting */}
+        <View style={styles.greetingSection}>
+          <Text style={[styles.greeting, { color: colors.textSecondary }]}>
+            {getGreeting()},
           </Text>
+          <Text style={[styles.userName, { color: colors.textPrimary }]}>
+            {user?.name || MOCK_USER.name}
+          </Text>
+        </View>
 
-          <View style={styles.actionGrid}>
+        {/* SearchBar */}
+        <View style={styles.searchSection}>
+          <SearchBar
+            value={searchQuery}
+            onChange={setSearchQuery}
+            onClear={() => setSearchQuery('')}
+            placeholder="Search routes, places..."
+            onSubmit={handleSearch}
+          />
+        </View>
+
+        {/* Featured Routes Carousel */}
+        <View style={styles.section}>
+          <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
+            Featured Routes
+          </Text>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.carousel}
+            snapToInterval={CARD_WIDTH + 16}
+            decelerationRate="fast"
+          >
+            {routes.map(route => (
+              <TouchableOpacity
+                key={route.id}
+                onPress={() => handleRoutePress(route.id)}
+                style={[styles.featuredCard, { backgroundColor: colors.card }]}
+                activeOpacity={0.9}
+              >
+                <Image
+                  source={{ uri: route.thumbnailUrl }}
+                  style={styles.featuredImage}
+                  resizeMode="cover"
+                />
+                <View style={styles.featuredOverlay}>
+                  <View style={styles.featuredContent}>
+                    <Text style={styles.featuredTitle} numberOfLines={2}>
+                      {route.title}
+                    </Text>
+                    <Text style={styles.featuredLocation} numberOfLines={1}>
+                      📍 {route.location}
+                    </Text>
+                    <View style={styles.featuredStats}>
+                      <Text style={styles.featuredStat}>
+                        🚶 {formatDistance(route.distanceMeters)}
+                      </Text>
+                      <Text style={styles.featuredStat}>•</Text>
+                      <Text style={styles.featuredStat}>
+                        ⏱️ {formatDuration(route.estimatedMinutes)}
+                      </Text>
+                      <Text style={styles.featuredStat}>•</Text>
+                      <Text style={styles.featuredStat}>⭐ {route.rating}</Text>
+                    </View>
+                    <View style={styles.tagsRow}>
+                      {route.tags.slice(0, 3).map((tag, index) => (
+                        <View key={index} style={styles.tag}>
+                          <Text style={styles.tagText}>{tag}</Text>
+                        </View>
+                      ))}
+                    </View>
+                  </View>
+                </View>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+        </View>
+
+        {/* 2x2 Feature Grid */}
+        <View style={styles.section}>
+          <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
+            Quick Access
+          </Text>
+          <View style={styles.featureGrid}>
             <TouchableOpacity
               style={[
-                styles.actionCard,
+                styles.featureCard,
                 { backgroundColor: colors.card, borderColor: colors.border },
               ]}
+              onPress={() => console.log('Navigate to Explore')}
+              activeOpacity={0.7}
             >
-              <Text style={styles.actionIcon}>🗺️</Text>
-              <Text style={[styles.actionTitle, { color: colors.textPrimary }]}>
-                Discover Routes
+              <View
+                style={[
+                  styles.featureIcon,
+                  { backgroundColor: colors.primaryLight },
+                ]}
+              >
+                <Text style={styles.featureEmoji}>🗺️</Text>
+              </View>
+              <Text
+                style={[styles.featureTitle, { color: colors.textPrimary }]}
+              >
+                Explore
               </Text>
               <Text
                 style={[
-                  styles.actionDescription,
+                  styles.featureSubtitle,
                   { color: colors.textSecondary },
                 ]}
               >
-                Find new destinations
+                Discover routes
               </Text>
             </TouchableOpacity>
 
             <TouchableOpacity
               style={[
-                styles.actionCard,
+                styles.featureCard,
                 { backgroundColor: colors.card, borderColor: colors.border },
               ]}
+              onPress={() => console.log('Navigate to Safety')}
+              activeOpacity={0.7}
             >
-              <Text style={styles.actionIcon}>🔖</Text>
-              <Text style={[styles.actionTitle, { color: colors.textPrimary }]}>
-                Bookmarks
-              </Text>
-              <Text
-                style={[
-                  styles.actionDescription,
-                  { color: colors.textSecondary },
-                ]}
+              <View
+                style={[styles.featureIcon, { backgroundColor: '#FEE2E2' }]}
               >
-                Saved destinations
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[
-                styles.actionCard,
-                { backgroundColor: colors.card, borderColor: colors.border },
-              ]}
-            >
-              <Text style={styles.actionIcon}>🛡️</Text>
-              <Text style={[styles.actionTitle, { color: colors.textPrimary }]}>
-                Safety Alerts
+                <Text style={styles.featureEmoji}>🛡️</Text>
+              </View>
+              <Text
+                style={[styles.featureTitle, { color: colors.textPrimary }]}
+              >
+                Safety
               </Text>
               <Text
                 style={[
-                  styles.actionDescription,
+                  styles.featureSubtitle,
                   { color: colors.textSecondary },
                 ]}
               >
@@ -186,56 +245,61 @@ export default function HomeScreen() {
 
             <TouchableOpacity
               style={[
-                styles.actionCard,
+                styles.featureCard,
                 { backgroundColor: colors.card, borderColor: colors.border },
               ]}
+              onPress={() => console.log('Navigate to News')}
+              activeOpacity={0.7}
             >
-              <Text style={styles.actionIcon}>📱</Text>
-              <Text style={[styles.actionTitle, { color: colors.textPrimary }]}>
-                Plan Trip
+              <View
+                style={[styles.featureIcon, { backgroundColor: '#DBEAFE' }]}
+              >
+                <Text style={styles.featureEmoji}>📰</Text>
+              </View>
+              <Text
+                style={[styles.featureTitle, { color: colors.textPrimary }]}
+              >
+                News
               </Text>
               <Text
                 style={[
-                  styles.actionDescription,
+                  styles.featureSubtitle,
                   { color: colors.textSecondary },
                 ]}
               >
-                Create itinerary
+                Latest updates
+              </Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[
+                styles.featureCard,
+                { backgroundColor: colors.card, borderColor: colors.border },
+              ]}
+              onPress={() => console.log('Navigate to Profile')}
+              activeOpacity={0.7}
+            >
+              <View
+                style={[styles.featureIcon, { backgroundColor: '#FCE7F3' }]}
+              >
+                <Text style={styles.featureEmoji}>👤</Text>
+              </View>
+              <Text
+                style={[styles.featureTitle, { color: colors.textPrimary }]}
+              >
+                Profile
+              </Text>
+              <Text
+                style={[
+                  styles.featureSubtitle,
+                  { color: colors.textSecondary },
+                ]}
+              >
+                Your account
               </Text>
             </TouchableOpacity>
           </View>
         </View>
-
-        {/* Placeholder Content */}
-        <View style={styles.placeholderContent}>
-          <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
-            Recommended for You
-          </Text>
-
-          <View
-            style={[
-              styles.placeholderCard,
-              { backgroundColor: colors.card, borderColor: colors.border },
-            ]}
-          >
-            <Text
-              style={[styles.placeholderText, { color: colors.textSecondary }]}
-            >
-              🚧 Travel recommendations will appear here once connected to the
-              Django backend
-            </Text>
-          </View>
-        </View>
-
-        {/* Sign Out Button */}
-        <TouchableOpacity
-          style={[styles.signOutButton, { backgroundColor: colors.error }]}
-          onPress={handleSignOut}
-        >
-          <Text style={[styles.signOutText, { color: colors.textInverse }]}>
-            Sign Out
-          </Text>
-        </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
   );
@@ -247,145 +311,133 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    paddingHorizontal: 16,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 16,
-    paddingHorizontal: 8,
+    paddingHorizontal: 16,
+    paddingTop: 8,
+    paddingBottom: 16,
+  },
+  greetingSection: {
+    paddingHorizontal: 16,
+    marginBottom: 16,
   },
   greeting: {
-    fontSize: 14,
+    fontSize: 16,
+    marginBottom: 4,
   },
   userName: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: 'bold',
   },
-  headerActions: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  userCard: {
-    padding: 16,
-    borderRadius: 12,
-    borderWidth: 1,
+  searchSection: {
+    paddingHorizontal: 16,
     marginBottom: 24,
   },
-  userInfo: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  avatar: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginRight: 12,
-  },
-  avatarText: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  userDetails: {
-    flex: 1,
-  },
-  userNameCard: {
-    fontSize: 18,
-    fontWeight: '600',
-    marginBottom: 2,
-  },
-  userEmail: {
-    fontSize: 14,
-    marginBottom: 2,
-  },
-  userCity: {
-    fontSize: 12,
-  },
-  interests: {
-    marginTop: 8,
-  },
-  interestsLabel: {
-    fontSize: 12,
-    fontWeight: '500',
-    marginBottom: 6,
-  },
-  interestTags: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 6,
-  },
-  interestTag: {
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 12,
-  },
-  interestText: {
-    fontSize: 11,
-    fontWeight: '500',
-  },
-  quickActions: {
-    marginBottom: 24,
+  section: {
+    marginBottom: 32,
   },
   sectionTitle: {
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 16,
-    paddingHorizontal: 8,
+    paddingHorizontal: 16,
   },
-  actionGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 12,
+  carousel: {
+    paddingLeft: 16,
+    paddingRight: 8,
   },
-  actionCard: {
-    flex: 1,
-    minWidth: '45%',
+  featuredCard: {
+    width: CARD_WIDTH,
+    height: 240,
+    borderRadius: 16,
+    marginRight: 16,
+    overflow: 'hidden',
+  },
+  featuredImage: {
+    width: '100%',
+    height: '100%',
+  },
+  featuredOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0,0,0,0.4)',
+    justifyContent: 'flex-end',
+  },
+  featuredContent: {
     padding: 16,
-    borderRadius: 8,
-    borderWidth: 1,
-    alignItems: 'center',
   },
-  actionIcon: {
-    fontSize: 24,
+  featuredTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#FFFFFF',
+    marginBottom: 4,
+  },
+  featuredLocation: {
+    fontSize: 14,
+    color: '#FFFFFF',
+    opacity: 0.9,
     marginBottom: 8,
   },
-  actionTitle: {
-    fontSize: 14,
-    fontWeight: '600',
-    marginBottom: 4,
-    textAlign: 'center',
+  featuredStats: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
   },
-  actionDescription: {
+  featuredStat: {
     fontSize: 12,
-    textAlign: 'center',
+    color: '#FFFFFF',
+    opacity: 0.9,
+    marginRight: 8,
   },
-  placeholderContent: {
-    marginBottom: 24,
+  tagsRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
   },
-  placeholderCard: {
-    padding: 24,
-    borderRadius: 8,
+  tag: {
+    backgroundColor: 'rgba(255,255,255,0.25)',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 12,
+    marginRight: 6,
+    marginTop: 4,
+  },
+  tagText: {
+    fontSize: 11,
+    color: '#FFFFFF',
+    fontWeight: '600',
+  },
+  featureGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    paddingHorizontal: 16,
+    gap: 12,
+  },
+  featureCard: {
+    width: (SCREEN_WIDTH - 44) / 2,
+    padding: 16,
+    borderRadius: 16,
     borderWidth: 1,
     alignItems: 'center',
   },
-  placeholderText: {
-    fontSize: 14,
-    textAlign: 'center',
-    lineHeight: 20,
-  },
-  signOutButton: {
-    paddingVertical: 12,
-    borderRadius: 8,
+  featureIcon: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
     alignItems: 'center',
-    marginBottom: 32,
-    marginHorizontal: 8,
+    justifyContent: 'center',
+    marginBottom: 12,
   },
-  signOutText: {
+  featureEmoji: {
+    fontSize: 28,
+  },
+  featureTitle: {
     fontSize: 16,
     fontWeight: '600',
+    marginBottom: 4,
+  },
+  featureSubtitle: {
+    fontSize: 12,
   },
 });

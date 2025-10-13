@@ -1,202 +1,590 @@
-/**
- * @fileoverview Profile Tab Screen - User profile, settings, and account management
- * @purpose User profile view with personal information and preferences
- * @inputs Optional userId from navigation params to view other profiles
- * @outputs User profile information and settings access
- *
- * TODO: Implement profile editing functionality
- * TODO: Add user statistics (routes completed, places visited, contributions)
- * TODO: Connect to Django API endpoint: /profile/:userId, /profile/stats
- * TODO: Implement profile photo upload
- * TODO: Add social features (followers, following)
- */
-
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
-  ScrollView,
   StyleSheet,
+  ScrollView,
   TouchableOpacity,
+  Alert,
+  Switch,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useThemeColors } from '../contexts';
+import { useThemeColors } from '../contexts/theme/ThemeContext';
 import { useAuth } from '../contexts/auth/AuthContext';
-import type { ProfileStackParamList } from '../navigation/types';
-import type { StackScreenProps } from '@react-navigation/stack';
+import { ThemeToggle } from '../components/ThemeToggle';
+import { Avatar } from '../components/Avatar';
+import { MOCK_USER } from '../data/mockData';
 
-type Props = StackScreenProps<ProfileStackParamList, 'Profile'>;
-
-export default function ProfileScreen({ route }: Props) {
+export default function ProfileScreen() {
   const colors = useThemeColors();
-  const { user, signOut } = useAuth();
-  const { userId } = route.params || {};
+  const { signOut } = useAuth();
+  const [safetyAlerts, setSafetyAlerts] = useState(
+    MOCK_USER.preferences.notifications.safetyAlerts
+  );
+  const [routeUpdates, setRouteUpdates] = useState(
+    MOCK_USER.preferences.notifications.routeUpdates
+  );
+  const [socialActivity, setSocialActivity] = useState(
+    MOCK_USER.preferences.notifications.socialActivity
+  );
 
-  // Viewing own profile if no userId provided
-  const isOwnProfile = !userId || userId === user?.id;
+  const handleSignOut = () => {
+    Alert.alert('Sign Out', 'Are you sure you want to sign out?', [
+      {
+        text: 'Cancel',
+        style: 'cancel',
+      },
+      {
+        text: 'Sign Out',
+        style: 'destructive',
+        onPress: signOut,
+      },
+    ]);
+  };
+
+  const handleEditProfile = () => {
+    Alert.alert('Edit Profile', 'Profile editing will be available soon!');
+  };
+
+  const handleSettingPress = (setting: string) => {
+    Alert.alert(setting, `${setting} settings coming soon!`);
+  };
 
   return (
     <SafeAreaView
       style={[styles.container, { backgroundColor: colors.background }]}
-      edges={['top', 'left', 'right']}
+      edges={['top']}
     >
-      <ScrollView style={styles.content}>
-        {/* Profile Header */}
+      {/* Header */}
+      <View style={styles.header}>
+        <View>
+          <Text style={[styles.title, { color: colors.textPrimary }]}>
+            Profile
+          </Text>
+          <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
+            Manage your account
+          </Text>
+        </View>
+        <ThemeToggle />
+      </View>
+
+      <ScrollView
+        style={styles.scrollView}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* Profile Header Card */}
         <View style={[styles.profileCard, { backgroundColor: colors.card }]}>
-          <View
-            style={[styles.avatar, { backgroundColor: colors.primary + '30' }]}
-          >
-            <Text style={styles.avatarText}>
-              {user?.name.charAt(0).toUpperCase()}
-            </Text>
+          <View style={styles.profileHeader}>
+            <Avatar
+              src={MOCK_USER.avatar}
+              initials={MOCK_USER.name
+                .split(' ')
+                .map(n => n[0])
+                .join('')}
+              size={80}
+            />
+            <TouchableOpacity
+              style={[styles.editButton, { backgroundColor: colors.primary }]}
+              onPress={handleEditProfile}
+            >
+              <Text style={styles.editButtonText}>✏️</Text>
+            </TouchableOpacity>
           </View>
-          <Text style={[styles.name, { color: colors.textPrimary }]}>
-            {user?.name || 'Guest User'}
+
+          <Text style={[styles.profileName, { color: colors.textPrimary }]}>
+            {MOCK_USER.name}
           </Text>
-          <Text style={[styles.email, { color: colors.textSecondary }]}>
-            {user?.email || 'guest@waytrove.com'}
+          <Text style={[styles.profileEmail, { color: colors.textSecondary }]}>
+            {MOCK_USER.email}
           </Text>
-          {user?.city && (
-            <Text style={[styles.location, { color: colors.textSecondary }]}>
-              📍 {user.city}
+          <Text
+            style={[styles.profileLocation, { color: colors.textSecondary }]}
+          >
+            📍 {MOCK_USER.city}
+          </Text>
+
+          {MOCK_USER.bio && (
+            <Text style={[styles.profileBio, { color: colors.textSecondary }]}>
+              {MOCK_USER.bio}
             </Text>
           )}
         </View>
 
-        {/* User Stats */}
-        <View style={[styles.statsCard, { backgroundColor: colors.card }]}>
-          <View style={styles.stat}>
+        {/* Stats Grid */}
+        <View style={styles.statsGrid}>
+          <View style={[styles.statCard, { backgroundColor: colors.card }]}>
             <Text style={[styles.statNumber, { color: colors.primary }]}>
-              24
+              {MOCK_USER.stats.routesCreated}
             </Text>
             <Text style={[styles.statLabel, { color: colors.textSecondary }]}>
-              Routes
+              Routes Created
             </Text>
           </View>
-          <View
-            style={[styles.statDivider, { backgroundColor: colors.border }]}
-          />
-          <View style={styles.stat}>
-            <Text style={[styles.statNumber, { color: colors.primary }]}>
-              156
+          <View style={[styles.statCard, { backgroundColor: colors.card }]}>
+            <Text style={[styles.statNumber, { color: colors.success }]}>
+              {MOCK_USER.stats.savedRoutes}
             </Text>
             <Text style={[styles.statLabel, { color: colors.textSecondary }]}>
-              Places
+              Saved Routes
             </Text>
           </View>
-          <View
-            style={[styles.statDivider, { backgroundColor: colors.border }]}
-          />
-          <View style={styles.stat}>
-            <Text style={[styles.statNumber, { color: colors.primary }]}>
-              42
+          <View style={[styles.statCard, { backgroundColor: colors.card }]}>
+            <Text style={[styles.statNumber, { color: colors.accent }]}>
+              {MOCK_USER.stats.followers}
             </Text>
             <Text style={[styles.statLabel, { color: colors.textSecondary }]}>
-              Reviews
+              Followers
+            </Text>
+          </View>
+          <View style={[styles.statCard, { backgroundColor: colors.card }]}>
+            <Text style={[styles.statNumber, { color: colors.info }]}>
+              {MOCK_USER.stats.following}
+            </Text>
+            <Text style={[styles.statLabel, { color: colors.textSecondary }]}>
+              Following
             </Text>
           </View>
         </View>
 
-        {/* Interests */}
-        {user?.interests && user.interests.length > 0 && (
-          <View style={[styles.card, { backgroundColor: colors.card }]}>
-            <Text style={[styles.cardTitle, { color: colors.textPrimary }]}>
-              ⭐ Interests
-            </Text>
-            <View style={styles.interestsList}>
-              {user.interests.map((interest, index) => (
+        {/* Account Section */}
+        <View style={styles.section}>
+          <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
+            Account
+          </Text>
+          <View style={[styles.settingsCard, { backgroundColor: colors.card }]}>
+            <TouchableOpacity
+              style={styles.settingItem}
+              onPress={() => handleSettingPress('Edit Profile')}
+            >
+              <View style={styles.settingLeft}>
                 <View
-                  key={index}
                   style={[
-                    styles.interestBadge,
+                    styles.settingIcon,
                     { backgroundColor: colors.primary + '20' },
                   ]}
                 >
+                  <Text style={styles.settingEmoji}>👤</Text>
+                </View>
+                <Text
+                  style={[styles.settingText, { color: colors.textPrimary }]}
+                >
+                  Edit Profile
+                </Text>
+              </View>
+              <Text
+                style={[styles.settingArrow, { color: colors.textTertiary }]}
+              >
+                ›
+              </Text>
+            </TouchableOpacity>
+
+            <View
+              style={[
+                styles.settingDivider,
+                { backgroundColor: colors.border },
+              ]}
+            />
+
+            <TouchableOpacity
+              style={styles.settingItem}
+              onPress={() => handleSettingPress('Change Password')}
+            >
+              <View style={styles.settingLeft}>
+                <View
+                  style={[
+                    styles.settingIcon,
+                    { backgroundColor: colors.warning + '20' },
+                  ]}
+                >
+                  <Text style={styles.settingEmoji}>🔒</Text>
+                </View>
+                <Text
+                  style={[styles.settingText, { color: colors.textPrimary }]}
+                >
+                  Change Password
+                </Text>
+              </View>
+              <Text
+                style={[styles.settingArrow, { color: colors.textTertiary }]}
+              >
+                ›
+              </Text>
+            </TouchableOpacity>
+
+            <View
+              style={[
+                styles.settingDivider,
+                { backgroundColor: colors.border },
+              ]}
+            />
+
+            <TouchableOpacity
+              style={styles.settingItem}
+              onPress={() => handleSettingPress('Privacy Settings')}
+            >
+              <View style={styles.settingLeft}>
+                <View
+                  style={[
+                    styles.settingIcon,
+                    { backgroundColor: colors.info + '20' },
+                  ]}
+                >
+                  <Text style={styles.settingEmoji}>🛡️</Text>
+                </View>
+                <Text
+                  style={[styles.settingText, { color: colors.textPrimary }]}
+                >
+                  Privacy Settings
+                </Text>
+              </View>
+              <Text
+                style={[styles.settingArrow, { color: colors.textTertiary }]}
+              >
+                ›
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        {/* Notifications Section */}
+        <View style={styles.section}>
+          <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
+            Notifications
+          </Text>
+          <View style={[styles.settingsCard, { backgroundColor: colors.card }]}>
+            <View style={styles.settingItem}>
+              <View style={styles.settingLeft}>
+                <View
+                  style={[
+                    styles.settingIcon,
+                    { backgroundColor: colors.error + '20' },
+                  ]}
+                >
+                  <Text style={styles.settingEmoji}>🚨</Text>
+                </View>
+                <View style={styles.settingTextContainer}>
                   <Text
-                    style={[styles.interestText, { color: colors.primary }]}
+                    style={[styles.settingText, { color: colors.textPrimary }]}
                   >
-                    {interest}
+                    Safety Alerts
+                  </Text>
+                  <Text
+                    style={[
+                      styles.settingSubtext,
+                      { color: colors.textSecondary },
+                    ]}
+                  >
+                    Get notified about safety issues
                   </Text>
                 </View>
-              ))}
+              </View>
+              <Switch
+                value={safetyAlerts}
+                onValueChange={setSafetyAlerts}
+                trackColor={{
+                  false: colors.border,
+                  true: colors.primary + '80',
+                }}
+                thumbColor={safetyAlerts ? colors.primary : colors.textTertiary}
+              />
+            </View>
+
+            <View
+              style={[
+                styles.settingDivider,
+                { backgroundColor: colors.border },
+              ]}
+            />
+
+            <View style={styles.settingItem}>
+              <View style={styles.settingLeft}>
+                <View
+                  style={[
+                    styles.settingIcon,
+                    { backgroundColor: colors.accent + '20' },
+                  ]}
+                >
+                  <Text style={styles.settingEmoji}>🗺️</Text>
+                </View>
+                <View style={styles.settingTextContainer}>
+                  <Text
+                    style={[styles.settingText, { color: colors.textPrimary }]}
+                  >
+                    Route Updates
+                  </Text>
+                  <Text
+                    style={[
+                      styles.settingSubtext,
+                      { color: colors.textSecondary },
+                    ]}
+                  >
+                    Updates on saved routes
+                  </Text>
+                </View>
+              </View>
+              <Switch
+                value={routeUpdates}
+                onValueChange={setRouteUpdates}
+                trackColor={{
+                  false: colors.border,
+                  true: colors.primary + '80',
+                }}
+                thumbColor={routeUpdates ? colors.primary : colors.textTertiary}
+              />
+            </View>
+
+            <View
+              style={[
+                styles.settingDivider,
+                { backgroundColor: colors.border },
+              ]}
+            />
+
+            <View style={styles.settingItem}>
+              <View style={styles.settingLeft}>
+                <View
+                  style={[
+                    styles.settingIcon,
+                    { backgroundColor: colors.success + '20' },
+                  ]}
+                >
+                  <Text style={styles.settingEmoji}>👥</Text>
+                </View>
+                <View style={styles.settingTextContainer}>
+                  <Text
+                    style={[styles.settingText, { color: colors.textPrimary }]}
+                  >
+                    Social Activity
+                  </Text>
+                  <Text
+                    style={[
+                      styles.settingSubtext,
+                      { color: colors.textSecondary },
+                    ]}
+                  >
+                    Followers and mentions
+                  </Text>
+                </View>
+              </View>
+              <Switch
+                value={socialActivity}
+                onValueChange={setSocialActivity}
+                trackColor={{
+                  false: colors.border,
+                  true: colors.primary + '80',
+                }}
+                thumbColor={
+                  socialActivity ? colors.primary : colors.textTertiary
+                }
+              />
             </View>
           </View>
-        )}
+        </View>
 
-        {/* Quick Actions */}
-        {isOwnProfile && (
-          <View style={[styles.card, { backgroundColor: colors.card }]}>
-            <Text style={[styles.cardTitle, { color: colors.textPrimary }]}>
-              ⚙️ Quick Actions
-            </Text>
-            <TouchableOpacity style={styles.actionItem}>
-              <Text style={[styles.actionText, { color: colors.textPrimary }]}>
-                Edit Profile
-              </Text>
+        {/* Preferences Section */}
+        <View style={styles.section}>
+          <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
+            Preferences
+          </Text>
+          <View style={[styles.settingsCard, { backgroundColor: colors.card }]}>
+            <TouchableOpacity
+              style={styles.settingItem}
+              onPress={() => handleSettingPress('Language')}
+            >
+              <View style={styles.settingLeft}>
+                <View
+                  style={[
+                    styles.settingIcon,
+                    { backgroundColor: colors.primary + '20' },
+                  ]}
+                >
+                  <Text style={styles.settingEmoji}>🌐</Text>
+                </View>
+                <Text
+                  style={[styles.settingText, { color: colors.textPrimary }]}
+                >
+                  Language
+                </Text>
+              </View>
+              <View style={styles.settingRight}>
+                <Text
+                  style={[styles.settingValue, { color: colors.textSecondary }]}
+                >
+                  English
+                </Text>
+                <Text
+                  style={[styles.settingArrow, { color: colors.textTertiary }]}
+                >
+                  ›
+                </Text>
+              </View>
+            </TouchableOpacity>
+
+            <View
+              style={[
+                styles.settingDivider,
+                { backgroundColor: colors.border },
+              ]}
+            />
+
+            <TouchableOpacity
+              style={styles.settingItem}
+              onPress={() => handleSettingPress('Units')}
+            >
+              <View style={styles.settingLeft}>
+                <View
+                  style={[
+                    styles.settingIcon,
+                    { backgroundColor: colors.accent + '20' },
+                  ]}
+                >
+                  <Text style={styles.settingEmoji}>📏</Text>
+                </View>
+                <Text
+                  style={[styles.settingText, { color: colors.textPrimary }]}
+                >
+                  Units
+                </Text>
+              </View>
+              <View style={styles.settingRight}>
+                <Text
+                  style={[styles.settingValue, { color: colors.textSecondary }]}
+                >
+                  {MOCK_USER.preferences.units === 'metric'
+                    ? 'Metric'
+                    : 'Imperial'}
+                </Text>
+                <Text
+                  style={[styles.settingArrow, { color: colors.textTertiary }]}
+                >
+                  ›
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        {/* More Section */}
+        <View style={styles.section}>
+          <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
+            More
+          </Text>
+          <View style={[styles.settingsCard, { backgroundColor: colors.card }]}>
+            <TouchableOpacity
+              style={styles.settingItem}
+              onPress={() => handleSettingPress('Help & Support')}
+            >
+              <View style={styles.settingLeft}>
+                <View
+                  style={[
+                    styles.settingIcon,
+                    { backgroundColor: colors.info + '20' },
+                  ]}
+                >
+                  <Text style={styles.settingEmoji}>❓</Text>
+                </View>
+                <Text
+                  style={[styles.settingText, { color: colors.textPrimary }]}
+                >
+                  Help & Support
+                </Text>
+              </View>
               <Text
-                style={[styles.actionIcon, { color: colors.textSecondary }]}
+                style={[styles.settingArrow, { color: colors.textTertiary }]}
               >
                 ›
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.actionItem}>
-              <Text style={[styles.actionText, { color: colors.textPrimary }]}>
-                My Routes
-              </Text>
+
+            <View
+              style={[
+                styles.settingDivider,
+                { backgroundColor: colors.border },
+              ]}
+            />
+
+            <TouchableOpacity
+              style={styles.settingItem}
+              onPress={() => handleSettingPress('About')}
+            >
+              <View style={styles.settingLeft}>
+                <View
+                  style={[
+                    styles.settingIcon,
+                    { backgroundColor: colors.success + '20' },
+                  ]}
+                >
+                  <Text style={styles.settingEmoji}>ℹ️</Text>
+                </View>
+                <Text
+                  style={[styles.settingText, { color: colors.textPrimary }]}
+                >
+                  About WayTrove
+                </Text>
+              </View>
               <Text
-                style={[styles.actionIcon, { color: colors.textSecondary }]}
+                style={[styles.settingArrow, { color: colors.textTertiary }]}
               >
                 ›
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.actionItem}>
-              <Text style={[styles.actionText, { color: colors.textPrimary }]}>
-                Preferences
-              </Text>
+
+            <View
+              style={[
+                styles.settingDivider,
+                { backgroundColor: colors.border },
+              ]}
+            />
+
+            <TouchableOpacity
+              style={styles.settingItem}
+              onPress={() => handleSettingPress('Terms & Privacy')}
+            >
+              <View style={styles.settingLeft}>
+                <View
+                  style={[
+                    styles.settingIcon,
+                    { backgroundColor: colors.textSecondary + '20' },
+                  ]}
+                >
+                  <Text style={styles.settingEmoji}>📄</Text>
+                </View>
+                <Text
+                  style={[styles.settingText, { color: colors.textPrimary }]}
+                >
+                  Terms & Privacy
+                </Text>
+              </View>
               <Text
-                style={[styles.actionIcon, { color: colors.textSecondary }]}
-              >
-                ›
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.actionItem}>
-              <Text style={[styles.actionText, { color: colors.textPrimary }]}>
-                About WayTrove
-              </Text>
-              <Text
-                style={[styles.actionIcon, { color: colors.textSecondary }]}
+                style={[styles.settingArrow, { color: colors.textTertiary }]}
               >
                 ›
               </Text>
             </TouchableOpacity>
           </View>
-        )}
-
-        {/* Sign Out */}
-        {isOwnProfile && (
-          <TouchableOpacity
-            style={[
-              styles.signOutButton,
-              { backgroundColor: colors.error + '15' },
-            ]}
-            onPress={signOut}
-          >
-            <Text style={[styles.signOutText, { color: colors.error }]}>
-              Sign Out
-            </Text>
-          </TouchableOpacity>
-        )}
-
-        <View style={[styles.card, { backgroundColor: colors.card }]}>
-          <Text style={[styles.cardTitle, { color: colors.textPrimary }]}>
-            🔗 API Integration
-          </Text>
-          <Text style={[styles.cardText, { color: colors.textSecondary }]}>
-            TODO: Connect to Django endpoints:{'\n'}• GET /profile/:userId{'\n'}
-            • PUT /profile/edit{'\n'}• GET /profile/stats{'\n'}• POST
-            /profile/photo
-          </Text>
         </View>
+
+        {/* Sign Out Button */}
+        <TouchableOpacity
+          style={[
+            styles.signOutButton,
+            { backgroundColor: colors.error + '15' },
+          ]}
+          onPress={handleSignOut}
+        >
+          <Text style={[styles.signOutText, { color: colors.error }]}>
+            Sign Out
+          </Text>
+        </TouchableOpacity>
+
+        {/* Version Info */}
+        <Text style={[styles.versionText, { color: colors.textTertiary }]}>
+          WayTrove v1.0.0
+        </Text>
+
+        {/* Bottom spacing */}
+        <View style={{ height: 24 }} />
       </ScrollView>
     </SafeAreaView>
   );
@@ -206,113 +594,181 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  content: {
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    marginBottom: 4,
+  },
+  subtitle: {
+    fontSize: 14,
+  },
+  scrollView: {
     flex: 1,
-    padding: 20,
+  },
+  scrollContent: {
+    paddingHorizontal: 20,
   },
   profileCard: {
-    alignItems: 'center',
+    borderRadius: 16,
     padding: 24,
-    borderRadius: 12,
+    alignItems: 'center',
+    marginBottom: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+  profileHeader: {
+    position: 'relative',
     marginBottom: 16,
   },
-  avatar: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
+  editButton: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
     justifyContent: 'center',
     alignItems: 'center',
+    borderWidth: 3,
+    borderColor: '#FFFFFF',
+  },
+  editButtonText: {
+    fontSize: 14,
+  },
+  profileName: {
+    fontSize: 24,
+    fontWeight: '700',
+    marginBottom: 4,
+  },
+  profileEmail: {
+    fontSize: 14,
+    marginBottom: 4,
+  },
+  profileLocation: {
+    fontSize: 14,
     marginBottom: 12,
   },
-  avatarText: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: '#FFF',
-  },
-  name: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 4,
-  },
-  email: {
+  profileBio: {
     fontSize: 14,
-    marginBottom: 4,
+    lineHeight: 20,
+    textAlign: 'center',
+    marginTop: 8,
   },
-  location: {
-    fontSize: 14,
-  },
-  statsCard: {
+  statsGrid: {
     flexDirection: 'row',
-    padding: 20,
-    borderRadius: 12,
-    marginBottom: 16,
-    justifyContent: 'space-around',
+    flexWrap: 'wrap',
+    marginHorizontal: -6,
+    marginBottom: 24,
   },
-  stat: {
+  statCard: {
+    width: '48%',
+    margin: '1%',
+    padding: 16,
+    borderRadius: 12,
     alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    elevation: 1,
   },
   statNumber: {
-    fontSize: 24,
-    fontWeight: 'bold',
+    fontSize: 28,
+    fontWeight: '700',
     marginBottom: 4,
   },
   statLabel: {
     fontSize: 12,
+    textAlign: 'center',
   },
-  statDivider: {
-    width: 1,
-    height: '100%',
+  section: {
+    marginBottom: 24,
   },
-  card: {
-    padding: 20,
-    borderRadius: 12,
-    marginBottom: 16,
-  },
-  cardTitle: {
-    fontSize: 18,
-    fontWeight: '600',
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: '700',
     marginBottom: 12,
   },
-  cardText: {
-    fontSize: 14,
-    lineHeight: 20,
+  settingsCard: {
+    borderRadius: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    elevation: 1,
   },
-  interestsList: {
+  settingItem: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
-  },
-  interestBadge: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 16,
-  },
-  interestText: {
-    fontSize: 12,
-    fontWeight: '600',
-  },
-  actionItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: 'rgba(0,0,0,0.05)',
+    justifyContent: 'space-between',
+    padding: 16,
   },
-  actionText: {
+  settingLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+  },
+  settingIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  settingEmoji: {
+    fontSize: 20,
+  },
+  settingTextContainer: {
+    flex: 1,
+  },
+  settingText: {
     fontSize: 16,
+    fontWeight: '500',
   },
-  actionIcon: {
+  settingSubtext: {
+    fontSize: 12,
+    marginTop: 2,
+  },
+  settingRight: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  settingValue: {
+    fontSize: 14,
+    marginRight: 4,
+  },
+  settingArrow: {
     fontSize: 24,
+    marginLeft: 4,
+  },
+  settingDivider: {
+    height: 1,
+    marginLeft: 68,
   },
   signOutButton: {
-    padding: 16,
     borderRadius: 12,
+    padding: 16,
     alignItems: 'center',
     marginBottom: 16,
   },
   signOutText: {
     fontSize: 16,
     fontWeight: '600',
+  },
+  versionText: {
+    fontSize: 12,
+    textAlign: 'center',
+    marginBottom: 8,
   },
 });

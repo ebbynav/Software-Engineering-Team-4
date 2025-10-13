@@ -1,0 +1,4 @@
+/* This file is required for NativeWind to work properly */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

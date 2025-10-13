@@ -26,3 +26,8 @@ export { Loader, Skeleton } from './loaders/Loader';
 export { Avatar } from './Avatar';
 export { SearchBar } from './SearchBar';
 export { BottomSheet } from './BottomSheet';
+
+// Form Components
+export { ThemedTextInput } from './TextInput';
+export { SocialButton } from './SocialButton';
+export { SegmentedControl } from './SegmentedControl';

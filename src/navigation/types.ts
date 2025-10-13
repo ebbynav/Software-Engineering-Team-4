@@ -27,7 +27,9 @@ export type RootStackParamList = {
   // Onboarding flow - shown only on first app launch
   Onboarding: undefined;
 
-  // Authentication flow - shown when user is not logged in
+  // Authentication screens - shown when user is not logged in
+  Login: undefined;
+  ForgotPassword: undefined;
   Auth: NavigatorScreenParams<AuthStackParamList>;
 
   // Main app flow - shown when user is logged in

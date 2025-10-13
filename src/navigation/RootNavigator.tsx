@@ -31,6 +31,7 @@ import {
   RouteDetailsScreen,
   SettingsScreen,
 } from '../screens';
+import ForgotPasswordScreen from '../screens/ForgotPasswordScreen';
 
 // Import navigators
 import MainTabs from './MainTabs';
@@ -115,14 +116,27 @@ export default function RootNavigator() {
 
         {/* Authentication Stack - Shown when not logged in */}
         {!isLoggedIn && hasSeenOnboarding && (
-          <Stack.Screen
-            name="Auth"
-            component={LoginScreen}
-            options={{
-              animationTypeForReplace: 'push',
-              gestureEnabled: false, // Prevent swipe back
-            }}
-          />
+          <>
+            <Stack.Screen
+              name="Login"
+              component={LoginScreen}
+              options={{
+                animationTypeForReplace: 'push',
+                gestureEnabled: false, // Prevent swipe back
+              }}
+            />
+            <Stack.Screen
+              name="ForgotPassword"
+              component={ForgotPasswordScreen}
+              options={{
+                headerShown: true,
+                headerTitle: '',
+                headerStyle: { backgroundColor: colors.background },
+                headerTintColor: colors.textPrimary,
+                headerShadowVisible: false,
+              }}
+            />
+          </>
         )}
 
         {/* Main App Stack - Shown when logged in */}

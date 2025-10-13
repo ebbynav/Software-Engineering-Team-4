@@ -1,131 +1,179 @@
 /**
- * @fileoverview Onboarding Screen - First-time user introduction
- * @purpose Introduces new users to WayTrove features and value proposition
- * @inputs Navigation props for moving to authentication or main app
- * @outputs Interactive onboarding flow with feature highlights
+ * OnboardingScreen
  *
- * TODO: Add onboarding slides with app features and screenshots
- * TODO: Implement swipe gestures for slide navigation
- * TODO: Add skip functionality with analytics tracking
- * TODO: Include privacy policy and terms of service links
+ * Three-slide carousel introducing WayTrove features with gradient backgrounds.
+ *
+ * VISUAL SPECIFICATIONS:
+ * - Full screen slides with horizontal pagination
+ * - Gradients that invert subtly in dark mode
+ * - Illustration placeholder (emoji): 100px font size, centered
+ * - Title: 32px, bold, 24px below illustration
+ * - Description: 16px, centered, textSecondary, 16px below title
+ * - Skip button: top-right, 16px from edges
+ * - Next/Get Started: bottom-right, 24px from edges
+ * - Pagination dots: centered bottom, 80px from bottom
+ *
+ * BEHAVIOR:
+ * - Swipe or tap Next to advance
+ * - Skip or Get Started persists @waytrove_has_seen_onboarding
+ * - Navigate to Login after completion
  */
 
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import {
   View,
   Text,
   StyleSheet,
+  ScrollView,
+  Dimensions,
   TouchableOpacity,
-  SafeAreaView,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
 } from 'react-native';
-import { useThemeColors } from '../contexts';
-import { useAuth } from '../contexts/auth/AuthContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { LinearGradient } from 'expo-linear-gradient';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { useThemeColors, useIsDark } from '../contexts/theme/ThemeContext';
+import {
+  ONBOARDING_SLIDES,
+  ONBOARDING_STORAGE_KEY,
+} from '../constants/onboarding';
+import { RootStackParamList } from '../types';
+import { PrimaryButton } from '../components';
+
+const { width: SCREEN_WIDTH } = Dimensions.get('window');
+
+type OnboardingNavigationProp = StackNavigationProp<
+  RootStackParamList,
+  'Onboarding'
+>;
 
 export default function OnboardingScreen() {
   const colors = useThemeColors();
-  const { markOnboardingComplete } = useAuth();
+  const isDark = useIsDark();
+  const navigation = useNavigation<OnboardingNavigationProp>();
+  const scrollViewRef = useRef<ScrollView>(null);
+  const [currentIndex, setCurrentIndex] = useState(0);
 
-  const handleGetStarted = async () => {
-    try {
-      await markOnboardingComplete();
-    } catch (error) {
-      console.error('Failed to complete onboarding:', error);
+  const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const offsetX = event.nativeEvent.contentOffset.x;
+    const index = Math.round(offsetX / SCREEN_WIDTH);
+    setCurrentIndex(index);
+  };
+
+  const handleNext = () => {
+    if (currentIndex < ONBOARDING_SLIDES.length - 1) {
+      scrollViewRef.current?.scrollTo({
+        x: SCREEN_WIDTH * (currentIndex + 1),
+        animated: true,
+      });
+    } else {
+      handleComplete();
     }
   };
 
+  const handleSkip = () => {
+    handleComplete();
+  };
+
+  const handleComplete = async () => {
+    try {
+      await AsyncStorage.setItem(ONBOARDING_STORAGE_KEY, 'true');
+      navigation.replace('Login');
+    } catch (error) {
+      console.error('Failed to save onboarding completion:', error);
+      navigation.replace('Login');
+    }
+  };
+
+  const isLastSlide = currentIndex === ONBOARDING_SLIDES.length - 1;
+
   return (
-    <SafeAreaView
-      style={[styles.container, { backgroundColor: colors.background }]}
-    >
-      <View style={styles.content}>
-        {/* Header */}
-        <View style={styles.header}>
-          <Text style={[styles.title, { color: colors.primary }]}>
-            Welcome to WayTrove
-          </Text>
-          <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
-            Discover amazing travel destinations and plan your next adventure
-          </Text>
-        </View>
-
-        {/* Features */}
-        <View style={styles.features}>
-          <View
-            style={[
-              styles.featureCard,
-              { backgroundColor: colors.card, borderColor: colors.border },
-            ]}
-          >
-            <Text style={[styles.featureTitle, { color: colors.textPrimary }]}>
-              🗺️ Discover Routes
-            </Text>
-            <Text
-              style={[
-                styles.featureDescription,
-                { color: colors.textSecondary },
-              ]}
-            >
-              Find curated travel routes and hidden gems from fellow travelers
-            </Text>
-          </View>
-
-          <View
-            style={[
-              styles.featureCard,
-              { backgroundColor: colors.card, borderColor: colors.border },
-            ]}
-          >
-            <Text style={[styles.featureTitle, { color: colors.textPrimary }]}>
-              🛡️ Stay Safe
-            </Text>
-            <Text
-              style={[
-                styles.featureDescription,
-                { color: colors.textSecondary },
-              ]}
-            >
-              Get real-time safety alerts and travel advisories for your
-              destinations
-            </Text>
-          </View>
-
-          <View
-            style={[
-              styles.featureCard,
-              { backgroundColor: colors.card, borderColor: colors.border },
-            ]}
-          >
-            <Text style={[styles.featureTitle, { color: colors.textPrimary }]}>
-              📱 Plan & Share
-            </Text>
-            <Text
-              style={[
-                styles.featureDescription,
-                { color: colors.textSecondary },
-              ]}
-            >
-              Create itineraries, bookmark favorites, and share your experiences
-            </Text>
-          </View>
-        </View>
-
-        {/* Action Button */}
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      {/* Skip Button */}
+      {!isLastSlide && (
         <TouchableOpacity
-          style={[styles.getStartedButton, { backgroundColor: colors.primary }]}
-          onPress={handleGetStarted}
-          activeOpacity={0.8}
+          style={styles.skipButton}
+          onPress={handleSkip}
+          accessibilityRole="button"
+          accessibilityLabel="Skip onboarding"
         >
-          <Text style={[styles.getStartedText, { color: colors.textInverse }]}>
-            Get Started
+          <Text style={[styles.skipText, { color: colors.textSecondary }]}>
+            Skip
           </Text>
         </TouchableOpacity>
+      )}
 
-        {/* Footer */}
-        <Text style={[styles.footerText, { color: colors.textTertiary }]}>
-          By continuing, you agree to our Terms of Service and Privacy Policy
-        </Text>
+      {/* Slides */}
+      <ScrollView
+        ref={scrollViewRef}
+        horizontal
+        pagingEnabled
+        showsHorizontalScrollIndicator={false}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
+        style={styles.scrollView}
+      >
+        {ONBOARDING_SLIDES.map(slide => (
+          <View key={slide.id} style={styles.slide}>
+            <LinearGradient
+              colors={
+                isDark
+                  ? slide.gradient?.dark || [
+                      colors.background,
+                      colors.background,
+                    ]
+                  : slide.gradient?.light || [
+                      colors.background,
+                      colors.background,
+                    ]
+              }
+              style={styles.gradient}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 0, y: 1 }}
+            >
+              <View style={styles.content}>
+                <Text style={styles.illustration}>{slide.illustration}</Text>
+                <Text style={[styles.title, { color: colors.textPrimary }]}>
+                  {slide.title}
+                </Text>
+                <Text
+                  style={[styles.description, { color: colors.textSecondary }]}
+                >
+                  {slide.description}
+                </Text>
+              </View>
+            </LinearGradient>
+          </View>
+        ))}
+      </ScrollView>
+
+      {/* Pagination Dots */}
+      <View style={styles.pagination}>
+        {ONBOARDING_SLIDES.map((_, index) => (
+          <View
+            key={index}
+            style={[
+              styles.dot,
+              {
+                backgroundColor:
+                  index === currentIndex ? colors.primary : colors.border,
+                width: index === currentIndex ? 24 : 8,
+              },
+            ]}
+          />
+        ))}
       </View>
-    </SafeAreaView>
+
+      {/* Next / Get Started Button */}
+      <View style={styles.buttonContainer}>
+        <PrimaryButton
+          label={isLastSlide ? 'Get Started' : 'Next'}
+          onPress={handleNext}
+        />
+      </View>
+    </View>
   );
 }
 
@@ -133,61 +181,65 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  content: {
-    flex: 1,
-    paddingHorizontal: 24,
-    paddingVertical: 32,
-    justifyContent: 'space-between',
+  skipButton: {
+    position: 'absolute',
+    top: 16,
+    right: 16,
+    zIndex: 10,
+    padding: 8,
   },
-  header: {
+  skipText: {
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  scrollView: {
+    flex: 1,
+  },
+  slide: {
+    width: SCREEN_WIDTH,
+  },
+  gradient: {
+    flex: 1,
+    justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 60,
+  },
+  content: {
+    alignItems: 'center',
+    paddingHorizontal: 32,
+  },
+  illustration: {
+    fontSize: 100,
+    marginBottom: 24,
   },
   title: {
     fontSize: 32,
     fontWeight: 'bold',
     textAlign: 'center',
-    marginBottom: 12,
+    marginBottom: 16,
   },
-  subtitle: {
+  description: {
     fontSize: 16,
     textAlign: 'center',
     lineHeight: 24,
-    paddingHorizontal: 16,
   },
-  features: {
-    flex: 1,
+  pagination: {
+    flexDirection: 'row',
     justifyContent: 'center',
-    gap: 24,
-  },
-  featureCard: {
-    padding: 20,
-    borderRadius: 12,
-    borderWidth: 1,
-  },
-  featureTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    marginBottom: 8,
-  },
-  featureDescription: {
-    fontSize: 14,
-    lineHeight: 20,
-  },
-  getStartedButton: {
-    paddingVertical: 16,
-    paddingHorizontal: 32,
-    borderRadius: 12,
     alignItems: 'center',
-    marginVertical: 24,
+    position: 'absolute',
+    bottom: 120,
+    left: 0,
+    right: 0,
   },
-  getStartedText: {
-    fontSize: 16,
-    fontWeight: '600',
+  dot: {
+    height: 8,
+    borderRadius: 4,
+    marginHorizontal: 4,
   },
-  footerText: {
-    fontSize: 12,
-    textAlign: 'center',
-    lineHeight: 16,
+  buttonContainer: {
+    position: 'absolute',
+    bottom: 24,
+    left: 24,
+    right: 24,
   },
 });

@@ -12,6 +12,8 @@
 // Navigation Types
 export type RootStackParamList = {
   Onboarding: undefined;
+  Login: undefined;
+  ForgotPassword: undefined;
   Auth: undefined;
   Main: undefined;
 };

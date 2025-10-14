@@ -18,11 +18,12 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
-  SafeAreaView,
   Alert,
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
 import { useThemeColors } from '../contexts';
 import { useAuth, SignInMethod } from '../contexts/auth/AuthContext';
 
@@ -74,6 +75,19 @@ export default function LoginScreen() {
           <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
             Sign in to continue your travel journey
           </Text>
+          
+          {/* Demo Credentials Box */}
+          <View style={[styles.demoBox, { backgroundColor: colors.card, borderColor: colors.primary }]}>
+            <Text style={[styles.demoTitle, { color: colors.primary }]}>
+              🎉 Demo Credentials
+            </Text>
+            <Text style={[styles.demoText, { color: colors.textSecondary }]}>
+              Email: demo@waytrove.com
+            </Text>
+            <Text style={[styles.demoText, { color: colors.textSecondary }]}>
+              Password: demo123
+            </Text>
+          </View>
         </View>
 
         {/* Social Sign In */}
@@ -81,31 +95,33 @@ export default function LoginScreen() {
           <TouchableOpacity
             style={[
               styles.socialButton,
-              { backgroundColor: colors.card, borderColor: colors.border },
+              { backgroundColor: '#FFFFFF', borderColor: '#DADCE0' },
             ]}
             onPress={() => handleSocialSignIn('google')}
             disabled={isAuthenticating}
           >
-            <Text
-              style={[styles.socialButtonText, { color: colors.textPrimary }]}
-            >
-              🔍 Continue with Google
-            </Text>
+            <View style={styles.socialButtonContent}>
+              <Ionicons name="logo-google" size={20} color="#4285F4" />
+              <Text style={[styles.socialButtonText, { color: '#3C4043' }]}>
+                Continue with Google
+              </Text>
+            </View>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={[
               styles.socialButton,
-              { backgroundColor: colors.card, borderColor: colors.border },
+              { backgroundColor: '#000000', borderColor: '#000000' },
             ]}
             onPress={() => handleSocialSignIn('apple')}
             disabled={isAuthenticating}
           >
-            <Text
-              style={[styles.socialButtonText, { color: colors.textPrimary }]}
-            >
-              🍎 Continue with Apple
-            </Text>
+            <View style={styles.socialButtonContent}>
+              <Ionicons name="logo-apple" size={20} color="#FFFFFF" />
+              <Text style={[styles.socialButtonText, { color: '#FFFFFF' }]}>
+                Continue with Apple
+              </Text>
+            </View>
           </TouchableOpacity>
         </View>
 
@@ -239,6 +255,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     alignItems: 'center',
   },
+  socialButtonContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
   socialButtonText: {
     fontSize: 16,
     fontWeight: '500',
@@ -297,5 +318,22 @@ const styles = StyleSheet.create({
   },
   signUpLink: {
     fontWeight: '600',
+  },
+  demoBox: {
+    marginTop: 20,
+    padding: 16,
+    borderRadius: 8,
+    borderWidth: 1.5,
+    alignItems: 'center',
+  },
+  demoTitle: {
+    fontSize: 14,
+    fontWeight: '700',
+    marginBottom: 8,
+  },
+  demoText: {
+    fontSize: 13,
+    fontFamily: Platform.OS === 'ios' ? 'Courier' : 'monospace',
+    marginVertical: 2,
   },
 });

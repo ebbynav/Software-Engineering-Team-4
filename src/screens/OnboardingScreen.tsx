@@ -30,29 +30,20 @@ import {
   NativeSyntheticEvent,
   NativeScrollEvent,
 } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
 import { useThemeColors, useIsDark } from '../contexts/theme/ThemeContext';
+import { useAuth } from '../contexts/auth/AuthContext';
 import {
   ONBOARDING_SLIDES,
-  ONBOARDING_STORAGE_KEY,
 } from '../constants/onboarding';
-import { RootStackParamList } from '../types';
 import { PrimaryButton } from '../components';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
-type OnboardingNavigationProp = StackNavigationProp<
-  RootStackParamList,
-  'Onboarding'
->;
-
 export default function OnboardingScreen() {
   const colors = useThemeColors();
   const isDark = useIsDark();
-  const navigation = useNavigation<OnboardingNavigationProp>();
+  const { markOnboardingComplete } = useAuth();
   const scrollViewRef = useRef<ScrollView>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -79,11 +70,12 @@ export default function OnboardingScreen() {
 
   const handleComplete = async () => {
     try {
-      await AsyncStorage.setItem(ONBOARDING_STORAGE_KEY, 'true');
-      navigation.replace('Login');
+      await markOnboardingComplete();
+      // No need to navigate - RootNavigator will handle this automatically
     } catch (error) {
       console.error('Failed to save onboarding completion:', error);
-      navigation.replace('Login');
+      // Even on error, mark as complete to prevent user from being stuck
+      await markOnboardingComplete();
     }
   };
 
@@ -115,24 +107,19 @@ export default function OnboardingScreen() {
         scrollEventThrottle={16}
         style={styles.scrollView}
       >
-        {ONBOARDING_SLIDES.map(slide => (
-          <View key={slide.id} style={styles.slide}>
-            <LinearGradient
-              colors={
-                isDark
-                  ? slide.gradient?.dark || [
-                      colors.background,
-                      colors.background,
-                    ]
-                  : slide.gradient?.light || [
-                      colors.background,
-                      colors.background,
-                    ]
-              }
-              style={styles.gradient}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 0, y: 1 }}
-            >
+        {ONBOARDING_SLIDES.map(slide => {
+          const gradientColors = isDark
+            ? slide.gradient?.dark || [colors.background, colors.background]
+            : slide.gradient?.light || [colors.background, colors.background];
+          
+          return (
+            <View key={slide.id} style={styles.slide}>
+              <LinearGradient
+                colors={gradientColors as [string, string, ...string[]]}
+                style={styles.gradient}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 0, y: 1 }}
+              >
               <View style={styles.content}>
                 <Text style={styles.illustration}>{slide.illustration}</Text>
                 <Text style={[styles.title, { color: colors.textPrimary }]}>
@@ -146,7 +133,8 @@ export default function OnboardingScreen() {
               </View>
             </LinearGradient>
           </View>
-        ))}
+          );
+        })}
       </ScrollView>
 
       {/* Pagination Dots */}

@@ -24,30 +24,21 @@ interface ThemeToggleProps {
 export function ThemeToggle({ size = 24, style, onToggle }: ThemeToggleProps) {
   const { isDark, toggleTheme, colors } = useTheme();
 
-  // Animation values
+  // Animation values - all using native driver for better performance
   const [rotateAnim] = React.useState(new Animated.Value(isDark ? 1 : 0));
   const [scaleAnim] = React.useState(new Animated.Value(1));
-  const [colorAnim] = React.useState(new Animated.Value(isDark ? 1 : 0));
 
   // Update animations when theme changes
   React.useEffect(() => {
     const toValue = isDark ? 1 : 0;
 
-    Animated.parallel([
-      Animated.timing(rotateAnim, {
-        toValue,
-        duration: THEME_TRANSITION_DURATION.COLORS,
-        easing: Easing.bezier(0.4, 0, 0.2, 1),
-        useNativeDriver: true,
-      }),
-      Animated.timing(colorAnim, {
-        toValue,
-        duration: THEME_TRANSITION_DURATION.COLORS,
-        easing: Easing.bezier(0.4, 0, 0.2, 1),
-        useNativeDriver: false,
-      }),
-    ]).start();
-  }, [isDark, rotateAnim, colorAnim]);
+    Animated.timing(rotateAnim, {
+      toValue,
+      duration: THEME_TRANSITION_DURATION.COLORS,
+      easing: Easing.bezier(0.4, 0, 0.2, 1),
+      useNativeDriver: true,
+    }).start();
+  }, [isDark, rotateAnim]);
 
   const handlePress = () => {
     // Scale animation for press feedback
@@ -74,20 +65,11 @@ export function ThemeToggle({ size = 24, style, onToggle }: ThemeToggleProps) {
     outputRange: ['0deg', '180deg'],
   });
 
-  const iconColor = colorAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: [colors.warning, colors.primary],
-  });
-
-  const backgroundColor = colorAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: [colors.card, colors.card],
-  });
-
-  const borderColor = colorAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: [colors.border, colors.border],
-  });
+  // Use current theme colors directly instead of animating them
+  // This avoids mixing native and JS-driven animations
+  const iconColor = isDark ? colors.primary : colors.warning;
+  const backgroundColor = colors.card;
+  const borderColor = colors.border;
 
   return (
     <TouchableOpacity

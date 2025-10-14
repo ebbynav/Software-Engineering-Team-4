@@ -11,9 +11,9 @@
  */
 
 import React from 'react';
-import { Text } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
+import { Ionicons } from '@expo/vector-icons';
 import { useThemeColors } from '../contexts';
 import type {
   MainTabParamList,
@@ -179,7 +179,7 @@ export default function MainTabs() {
         options={{
           tabBarLabel: 'Home',
           tabBarIcon: ({ color, size }) => (
-            <TabIcon icon="🏠" color={color} size={size} />
+            <Ionicons name="home" size={size} color={color} />
           ),
         }}
       />
@@ -189,7 +189,7 @@ export default function MainTabs() {
         options={{
           tabBarLabel: 'Explore',
           tabBarIcon: ({ color, size }) => (
-            <TabIcon icon="🌍" color={color} size={size} />
+            <Ionicons name="compass" size={size} color={color} />
           ),
         }}
       />
@@ -199,7 +199,7 @@ export default function MainTabs() {
         options={{
           tabBarLabel: 'Safety',
           tabBarIcon: ({ color, size }) => (
-            <TabIcon icon="🛡️" color={color} size={size} />
+            <Ionicons name="shield-checkmark" size={size} color={color} />
           ),
         }}
       />
@@ -209,7 +209,7 @@ export default function MainTabs() {
         options={{
           tabBarLabel: 'News',
           tabBarIcon: ({ color, size }) => (
-            <TabIcon icon="📰" color={color} size={size} />
+            <Ionicons name="newspaper" size={size} color={color} />
           ),
         }}
       />
@@ -219,7 +219,7 @@ export default function MainTabs() {
         options={{
           tabBarLabel: 'Profile',
           tabBarIcon: ({ color, size }) => (
-            <TabIcon icon="👤" color={color} size={size} />
+            <Ionicons name="person" size={size} color={color} />
           ),
         }}
       />
@@ -227,18 +227,4 @@ export default function MainTabs() {
   );
 }
 
-/**
- * Tab Icon Component
- * Renders emoji icons with theme-aware coloring
- * TODO: Replace with proper icon library (e.g., @expo/vector-icons)
- */
-function TabIcon({
-  icon,
-  size,
-}: {
-  icon: string;
-  color: string;
-  size: number;
-}) {
-  return <Text style={{ fontSize: size + 4 }}>{icon}</Text>;
-}
+

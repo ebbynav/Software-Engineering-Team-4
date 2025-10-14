@@ -18,12 +18,12 @@ import {
   View,
   Text,
   StyleSheet,
-  SafeAreaView,
   ScrollView,
   TouchableOpacity,
   FlatList,
   Alert,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useThemeColors } from '../contexts/theme/ThemeContext';
 import { ThemeToggle, PillChip, RouteCard } from '../components';
 import { EXPLORE_ITEMS, ExploreItem } from '../data/mockData';
@@ -151,53 +151,58 @@ export default function ExploreScreen() {
         <ThemeToggle size={20} />
       </View>
 
-      {/* Sticky Filter Chips */}
-      <View
-        style={[styles.filterContainer, { backgroundColor: colors.background }]}
+      <ScrollView 
+        style={styles.scrollContainer}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContent}
       >
-        <Text style={[styles.filterLabel, { color: colors.textSecondary }]}>
-          Category
-        </Text>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.filterRow}
+        {/* Sticky Filter Chips */}
+        <View
+          style={[styles.filterContainer, { backgroundColor: colors.background }]}
         >
-          <PillChip
-            label="All"
-            selected={categoryFilter === 'all'}
-            onToggle={() => handleCategoryChange('all')}
-          />
-          <PillChip
-            label="Culture"
-            selected={categoryFilter === 'culture'}
-            onToggle={() => handleCategoryChange('culture')}
-          />
-          <PillChip
-            label="Nature"
-            selected={categoryFilter === 'nature'}
-            onToggle={() => handleCategoryChange('nature')}
-          />
-          <PillChip
-            label="Food"
-            selected={categoryFilter === 'food'}
-            onToggle={() => handleCategoryChange('food')}
-          />
-          <PillChip
-            label="Adventure"
-            selected={categoryFilter === 'adventure'}
-            onToggle={() => handleCategoryChange('adventure')}
-          />
-        </ScrollView>
+          <Text style={[styles.filterLabel, { color: colors.textSecondary }]}>
+            Category
+          </Text>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.filterRow}
+          >
+            <PillChip
+              label="All"
+              selected={categoryFilter === 'all'}
+              onToggle={() => handleCategoryChange('all')}
+            />
+            <PillChip
+              label="Culture"
+              selected={categoryFilter === 'culture'}
+              onToggle={() => handleCategoryChange('culture')}
+            />
+            <PillChip
+              label="Nature"
+              selected={categoryFilter === 'nature'}
+              onToggle={() => handleCategoryChange('nature')}
+            />
+            <PillChip
+              label="Food"
+              selected={categoryFilter === 'food'}
+              onToggle={() => handleCategoryChange('food')}
+            />
+            <PillChip
+              label="Adventure"
+              selected={categoryFilter === 'adventure'}
+              onToggle={() => handleCategoryChange('adventure')}
+            />
+          </ScrollView>
 
-        <Text style={[styles.filterLabel, { color: colors.textSecondary }]}>
-          Safety
-        </Text>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.filterRow}
-        >
+          <Text style={[styles.filterLabel, { color: colors.textSecondary }]}>
+            Safety
+          </Text>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.filterRow}
+          >
           <PillChip
             label="All"
             selected={safetyFilter === 'all'}
@@ -262,20 +267,14 @@ export default function ExploreScreen() {
         </Text>
       </View>
 
-      {/* Route List */}
-      <View style={styles.listHeader}>
-        <Text style={[styles.listTitle, { color: colors.textPrimary }]}>
-          {items.length} {items.length === 1 ? 'Result' : 'Results'}
-        </Text>
-      </View>
+        {/* Route List */}
+        <View style={styles.listHeader}>
+          <Text style={[styles.listTitle, { color: colors.textPrimary }]}>
+            {items.length} {items.length === 1 ? 'Result' : 'Results'}
+          </Text>
+        </View>
 
-      <FlatList
-        data={items}
-        renderItem={renderItem}
-        keyExtractor={item => item.id}
-        contentContainerStyle={styles.listContent}
-        showsVerticalScrollIndicator={false}
-        ListEmptyComponent={
+        {items.length === 0 ? (
           <View style={styles.emptyState}>
             <Text style={styles.emptyIcon}>🔍</Text>
             <Text style={[styles.emptyText, { color: colors.textSecondary }]}>
@@ -285,8 +284,23 @@ export default function ExploreScreen() {
               Try adjusting your search criteria
             </Text>
           </View>
-        }
-      />
+        ) : (
+          items.map((item) => (
+            <View key={item.id} style={styles.routeCardWrapper}>
+              <RouteCard
+                title={item.title}
+                distance={formatDistance(item.distanceMeters)}
+                duration={formatDuration(item.estimatedMinutes)}
+                tags={item.tags}
+                mapPreview={item.thumbnailUrl}
+                isSaved={item.isSaved}
+                onPress={() => handleRoutePress(item)}
+                onToggleSave={() => handleSaveToggle(item.id)}
+              />
+            </View>
+          ))
+        )}
+      </ScrollView>
 
       {/* FAB - Create Route */}
       <TouchableOpacity
@@ -304,6 +318,12 @@ export default function ExploreScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  scrollContainer: {
+    flex: 1,
+  },
+  scrollContent: {
+    paddingBottom: 100,
   },
   header: {
     flexDirection: 'row',

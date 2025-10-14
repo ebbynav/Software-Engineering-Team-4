@@ -95,7 +95,12 @@ const toggleTheme = async () => {
 ```typescript
 // Mock login (accepts any credentials)
 const login = async (email: string, password: string) => {
-  const mockUser = { id: '1', email, username: email.split('@')[0], fullName: 'Demo User' };
+  const mockUser = {
+    id: '1',
+    email,
+    username: email.split('@')[0],
+    fullName: 'Demo User',
+  };
   const mockToken = 'mock-jwt-token-' + Date.now();
 
   await AsyncStorage.setItem('@auth/token', mockToken);
@@ -182,7 +187,10 @@ const login = async (email: string, password: string) => {
 // RouteDetailsScreen: Like button
 const handleLike = () => {
   setIsLiked(!isLiked);
-  Alert.alert('Success', isLiked ? 'Removed from favorites' : 'Added to favorites');
+  Alert.alert(
+    'Success',
+    isLiked ? 'Removed from favorites' : 'Added to favorites'
+  );
 };
 
 // NewsDetailsScreen: Share button

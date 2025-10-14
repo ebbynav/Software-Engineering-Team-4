@@ -123,35 +123,35 @@ export function AuthProvider({ children }: AuthProviderProps) {
     const mockUsers = {
       google: {
         id: 'google_123456',
-        name: 'Alex Johnson',
-        email: 'alex.johnson@gmail.com',
+        name: 'Aniket Singh',
+        email: 'aniket.singh@gmail.com',
         avatarUrl: 'https://lh3.googleusercontent.com/a/default-user',
-        city: 'San Francisco',
+        city: 'New York',
         interests: ['hiking', 'photography', 'travel', 'food'],
       },
       apple: {
         id: 'apple_789012',
-        name: 'Sam Chen',
-        email: 'sam.chen@icloud.com',
+        name: 'Rishik Gannavarapu',
+        email: 'rishik.g@icloud.com',
         avatarUrl: undefined, // Apple often doesn't provide avatar
         city: 'New York',
         interests: ['architecture', 'art', 'cycling', 'coffee'],
       },
       email: {
         id: 'email_345678',
-        name: 'Jordan Rivera',
-        email: 'jordan.rivera@example.com',
+        name: 'Rishik Kolli',
+        email: 'rishik.kolli@example.com',
         avatarUrl: undefined,
-        city: 'Austin',
+        city: 'New York',
         interests: ['music', 'outdoor', 'tech', 'adventure'],
       },
       returning: {
         id: 'user_999999',
-        name: 'Taylor Smith',
+        name: 'Abhinav Sivakumar',
         email: 'taylor.smith@example.com',
         avatarUrl:
           'https://ui-avatars.com/api/?name=Taylor+Smith&background=6C63FF&color=fff',
-        city: 'Seattle',
+        city: 'New York',
         interests: [
           'nature',
           'backpacking',
@@ -198,6 +198,21 @@ export function AuthProvider({ children }: AuthProviderProps) {
         if (!emailPayload.email || !emailPayload.password) {
           throw new Error('Email and password are required');
         }
+        
+        // Demo credentials for testing
+        const DEMO_CREDENTIALS = {
+          email: 'demo@waytrove.com',
+          password: 'demo123',
+        };
+        
+        // Check if demo credentials are used
+        if (
+          emailPayload.email !== DEMO_CREDENTIALS.email ||
+          emailPayload.password !== DEMO_CREDENTIALS.password
+        ) {
+          throw new Error('Invalid credentials. Use demo@waytrove.com / demo123');
+        }
+        
         // TODO: Replace with actual API call
         console.log('Mock email sign-in:', emailPayload.email);
       }

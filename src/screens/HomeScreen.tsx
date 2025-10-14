@@ -19,13 +19,14 @@ import {
   View,
   Text,
   StyleSheet,
-  SafeAreaView,
   TouchableOpacity,
   ScrollView,
   RefreshControl,
   Dimensions,
   Image,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
 import { useThemeColors } from '../contexts/theme/ThemeContext';
 import { useAuth } from '../contexts/auth/AuthContext';
 import { ThemeToggle, SearchBar, Avatar } from '../components';
@@ -198,7 +199,7 @@ export default function HomeScreen() {
                   { backgroundColor: colors.primaryLight },
                 ]}
               >
-                <Text style={styles.featureEmoji}>🗺️</Text>
+                <Ionicons name="compass" size={28} color={colors.primary} />
               </View>
               <Text
                 style={[styles.featureTitle, { color: colors.textPrimary }]}
@@ -226,7 +227,7 @@ export default function HomeScreen() {
               <View
                 style={[styles.featureIcon, { backgroundColor: '#FEE2E2' }]}
               >
-                <Text style={styles.featureEmoji}>🛡️</Text>
+                <Ionicons name="shield-checkmark" size={28} color="#DC2626" />
               </View>
               <Text
                 style={[styles.featureTitle, { color: colors.textPrimary }]}
@@ -254,7 +255,7 @@ export default function HomeScreen() {
               <View
                 style={[styles.featureIcon, { backgroundColor: '#DBEAFE' }]}
               >
-                <Text style={styles.featureEmoji}>📰</Text>
+                <Ionicons name="newspaper" size={28} color="#2563EB" />
               </View>
               <Text
                 style={[styles.featureTitle, { color: colors.textPrimary }]}
@@ -282,7 +283,7 @@ export default function HomeScreen() {
               <View
                 style={[styles.featureIcon, { backgroundColor: '#FCE7F3' }]}
               >
-                <Text style={styles.featureEmoji}>👤</Text>
+                <Ionicons name="person" size={28} color="#DB2777" />
               </View>
               <Text
                 style={[styles.featureTitle, { color: colors.textPrimary }]}

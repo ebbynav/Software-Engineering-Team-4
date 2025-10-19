@@ -85,12 +85,23 @@ export async function login(_email: string, _password: string) {
 
     const variables = { input: { email: _email, password: _password } };
     const res = await post('/graphql', { query: graphqlMutation, variables });
-    return res.data;
+    // If calling GraphQL, our api wrapper returns an envelope: { error:false, message, data }
+    // where data is the raw GraphQL response (e.g. { data: { login: { ... } } }).
+    if (res && (res as any).data) {
+      const gqlResp = (res as any).data as any;
+      // Common shapes:
+      // 1) gqlResp = { data: { login: { user, tokens } } }
+      // 2) gqlResp = { login: { user, tokens } }
+      const candidate = gqlResp?.data?.login ?? gqlResp?.login ?? gqlResp?.data ?? gqlResp;
+      return candidate;
+    }
+    return res;
   } catch (err) {
     // Fallback to REST-style endpoint
     try {
       const res = await post('/auth/login', { email: _email, password: _password });
-      return res.data;
+      // REST style might return envelope { error:false, message, data }
+      return (res as any).data ?? res;
     } catch (err2) {
       throw err2;
     }
@@ -117,12 +128,17 @@ export async function register(
     };
 
     const res = await post('/graphql', { query: graphqlMutation, variables });
-    return res.data;
+    if (res && (res as any).data) {
+      const gqlResp = (res as any).data as any;
+      const candidate = gqlResp?.data?.register ?? gqlResp?.register ?? gqlResp?.data ?? gqlResp;
+      return candidate;
+    }
+    return res;
   } catch (err) {
     // Fallback to REST-style endpoint
     try {
       const res = await post('/auth/register', { email, password, username, fullName });
-      return res.data;
+      return (res as any).data ?? res;
     } catch (err2) {
       // If both fail, surface original error
       throw err2;

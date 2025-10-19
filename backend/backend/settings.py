@@ -24,7 +24,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.gis',
+    # NOTE: Removed django.contrib.gis for faster local dev without GDAL.
+    # To enable GIS features in production/dev, install GDAL and re-add
+    # 'django.contrib.gis' here. See docs/ for GDAL/PostGIS setup instructions.
+    # 'django.contrib.gis',
     'graphene_django',
     'rest_framework',
     'rest_framework_simplejwt',

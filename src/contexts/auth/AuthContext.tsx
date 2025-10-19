@@ -211,15 +211,65 @@ export function AuthProvider({ children }: AuthProviderProps) {
         // Try backend login if authService.login implemented
         if (authService.login && typeof authService.login === 'function') {
           const resp = await authService.login(emailPayload.email, emailPayload.password);
-          // Expect resp to include tokens and user
-          if (resp && (resp as any).tokens) {
-            await AsyncStorage.setItem(
-              STORAGE_KEYS.AUTH_TOKENS,
-              JSON.stringify((resp as any).tokens)
-            );
-          }
-          if (resp && (resp as any).user) {
-            setUser((resp as any).user as User);
+
+          // Normalize token shapes and persist consistently
+          try {
+            const anyResp = resp as any;
+
+            // Priority: resp.tokens OR resp.access_token/refresh_token OR resp.accessToken/refreshToken
+            let normalizedTokens: {
+              accessToken?: string;
+              refreshToken?: string;
+              expiresIn?: number;
+            } | null = null;
+
+            if (anyResp?.tokens) {
+              const t = anyResp.tokens;
+              normalizedTokens = {
+                accessToken: t.accessToken ?? t.access_token,
+                refreshToken: t.refreshToken ?? t.refresh_token,
+                expiresIn: t.expiresIn ?? t.expires_in,
+              };
+            } else if (anyResp?.access_token || anyResp?.refresh_token || anyResp?.accessToken) {
+              normalizedTokens = {
+                accessToken: anyResp.access_token ?? anyResp.accessToken,
+                refreshToken: anyResp.refresh_token ?? anyResp.refreshToken,
+              };
+            } else if (anyResp?.data) {
+              // GraphQL envelope shapes: { data: { login: { user, access_token } } } or { data: { login: { tokens: {...} } } }
+              const candidate = anyResp.data?.login ?? anyResp.data;
+              if (candidate?.tokens) {
+                const t = candidate.tokens;
+                normalizedTokens = {
+                  accessToken: t.accessToken ?? t.access_token,
+                  refreshToken: t.refreshToken ?? t.refresh_token,
+                  expiresIn: t.expiresIn ?? t.expires_in,
+                };
+              } else if (candidate?.access_token || candidate?.accessToken) {
+                normalizedTokens = {
+                  accessToken: candidate.access_token ?? candidate.accessToken,
+                  refreshToken: candidate.refresh_token ?? candidate.refreshToken,
+                };
+              }
+            }
+
+            if (
+              normalizedTokens &&
+              (normalizedTokens.accessToken || normalizedTokens.refreshToken)
+            ) {
+              await AsyncStorage.setItem(
+                STORAGE_KEYS.AUTH_TOKENS,
+                JSON.stringify(normalizedTokens)
+              );
+            }
+
+            // user object may be at resp.user or resp.data.login.user
+            const userObj = (anyResp?.user ?? anyResp?.data?.login?.user ?? anyResp?.data?.user) as
+              | User
+              | undefined;
+            if (userObj) setUser(userObj as User);
+          } catch (e) {
+            if (__DEV__) console.warn('Failed to normalize login response', e);
           }
 
           // Persist auth flag
@@ -270,16 +320,55 @@ export function AuthProvider({ children }: AuthProviderProps) {
       // Try backend register if available
       if (authService.register && typeof authService.register === 'function') {
         const resp = await authService.register(payload.email, payload.password, '', payload.name);
-        // If backend returned tokens, persist them
-        if (resp && (resp as any).tokens) {
-          await AsyncStorage.setItem(
-            STORAGE_KEYS.AUTH_TOKENS,
-            JSON.stringify((resp as any).tokens)
-          );
+        try {
+          const anyResp = resp as any;
+          let normalizedTokens: {
+            accessToken?: string;
+            refreshToken?: string;
+            expiresIn?: number;
+          } | null = null;
+
+          if (anyResp?.tokens) {
+            const t = anyResp.tokens;
+            normalizedTokens = {
+              accessToken: t.accessToken ?? t.access_token,
+              refreshToken: t.refreshToken ?? t.refresh_token,
+              expiresIn: t.expiresIn ?? t.expires_in,
+            };
+          } else if (anyResp?.access_token || anyResp?.accessToken) {
+            normalizedTokens = {
+              accessToken: anyResp.access_token ?? anyResp.accessToken,
+              refreshToken: anyResp.access_token ?? anyResp.refreshToken,
+            };
+          } else if (anyResp?.data) {
+            const candidate = anyResp.data?.register ?? anyResp.data;
+            if (candidate?.tokens) {
+              const t = candidate.tokens;
+              normalizedTokens = {
+                accessToken: t.accessToken ?? t.access_token,
+                refreshToken: t.refreshToken ?? t.refresh_token,
+                expiresIn: t.expiresIn ?? t.expires_in,
+              };
+            } else if (candidate?.access_token || candidate?.accessToken) {
+              normalizedTokens = {
+                accessToken: candidate.access_token ?? candidate.accessToken,
+                refreshToken: candidate.refresh_token ?? candidate.refreshToken,
+              };
+            }
+          }
+
+          if (normalizedTokens && (normalizedTokens.accessToken || normalizedTokens.refreshToken)) {
+            await AsyncStorage.setItem(STORAGE_KEYS.AUTH_TOKENS, JSON.stringify(normalizedTokens));
+          }
+
+          const userObj = (anyResp?.user ??
+            anyResp?.data?.register?.user ??
+            anyResp?.data?.user) as User | undefined;
+          if (userObj) setUser(userObj as User);
+        } catch (e) {
+          if (__DEV__) console.warn('Failed to normalize register response', e);
         }
-        if (resp && (resp as any).user) {
-          setUser((resp as any).user as User);
-        }
+
         await AsyncStorage.setItem(STORAGE_KEYS.AUTH, 'true');
         setIsAuthenticating(false);
         return;

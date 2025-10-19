@@ -12,7 +12,6 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { ThemedTextInput, PrimaryButton } from '../components';
 import { useThemeColors } from '../contexts/theme/ThemeContext';
 import { useAuth } from '../contexts/auth/AuthContext';
-import * as authService from '../services/authService';
 
 export default function SignUpScreen() {
   const colors = useThemeColors();
@@ -37,14 +36,9 @@ export default function SignUpScreen() {
 
     setLoading(true);
     try {
-      // Prefer real backend register when implemented, fall back to mock
-      if (authService.register && typeof authService.register === 'function') {
-        await authService.register(email, password, '', name);
-        // The authService.register should return tokens/user; for now we show a success
-        Alert.alert('Success', 'Account created. Please check your email to verify (if required).');
-      } else {
-        await signUpMock({ name, email, password });
-      }
+      // Use AuthContext signUp flow which handles backend/register and sets auth state
+      await signUpMock({ name, email, password });
+      Alert.alert('Success', 'Account created. You are now signed in.');
     } catch (error) {
       console.error('Sign up failed', error);
       Alert.alert('Sign Up Failed', (error as Error).message || 'Please try again');

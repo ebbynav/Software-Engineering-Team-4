@@ -29,8 +29,9 @@ import { Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { STORAGE_KEYS } from '../utils/constants';
 
-// Base URL from environment variable (fallback to localhost for development)
-const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL || 'http://localhost:3000/api';
+// Base URL from environment variable (fallback to backend dev server)
+// Backend Django + Graphene in this repo runs on port 8000 by default (docker-compose)
+const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL || 'http://localhost:8000';
 
 /**
  * Standard API Error Envelope

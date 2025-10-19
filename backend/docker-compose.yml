@@ -1,0 +1,27 @@
+version: '3.8'
+services:
+  db:
+    image: postgis/postgis:15-3.4
+    environment:
+      POSTGRES_DB: waytrove
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    ports:
+      - '5433:5432'
+
+  web:
+    build: .
+    command: gunicorn backend.wsgi:application --bind 0.0.0.0:8000
+    ports:
+      - '8000:8000'
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@db:5432/waytrove
+      DJANGO_SECRET: change-me
+      DEBUG: 'True'
+    depends_on:
+      - db
+
+volumes:
+  db_data:

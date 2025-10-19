@@ -21,15 +21,20 @@ import {
   Alert,
   KeyboardAvoidingView,
   Platform,
+  ScrollView,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useThemeColors } from '../contexts';
 import { useAuth, SignInMethod } from '../contexts/auth/AuthContext';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RootStackParamList } from '../types';
 
 export default function LoginScreen() {
   const colors = useThemeColors();
   const { signInMock, isAuthenticating } = useAuth();
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -37,10 +42,7 @@ export default function LoginScreen() {
     try {
       await signInMock('email', { email, password });
     } catch (error) {
-      Alert.alert(
-        'Sign In Failed',
-        'Please check your credentials and try again.'
-      );
+      Alert.alert('Sign In Failed', 'Please check your credentials and try again.');
     }
   };
 
@@ -52,170 +54,161 @@ export default function LoginScreen() {
 
       await signInMock(method, {});
     } catch (error) {
-      Alert.alert(
-        'Sign In Failed',
-        `Failed to sign in with ${method}. Please try again.`
-      );
+      Alert.alert('Sign In Failed', `Failed to sign in with ${method}. Please try again.`);
     }
   };
 
   return (
-    <SafeAreaView
-      style={[styles.container, { backgroundColor: colors.background }]}
-    >
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       <KeyboardAvoidingView
         style={styles.content}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       >
-        {/* Header */}
-        <View style={styles.header}>
-          <Text style={[styles.title, { color: colors.textPrimary }]}>
-            Welcome Back
-          </Text>
-          <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
-            Sign in to continue your travel journey
-          </Text>
-          
-          {/* Demo Credentials Box */}
-          <View style={[styles.demoBox, { backgroundColor: colors.card, borderColor: colors.primary }]}>
-            <Text style={[styles.demoTitle, { color: colors.primary }]}>
-              🎉 Demo Credentials
+        <ScrollView
+          contentContainerStyle={{ flexGrow: 1 }}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+        >
+          {/* Header */}
+          <View style={styles.header}>
+            <Text style={[styles.title, { color: colors.textPrimary }]}>Welcome Back</Text>
+            <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
+              Sign in to continue your travel journey
             </Text>
-            <Text style={[styles.demoText, { color: colors.textSecondary }]}>
-              Email: demo@waytrove.com
-            </Text>
-            <Text style={[styles.demoText, { color: colors.textSecondary }]}>
-              Password: demo123
-            </Text>
-          </View>
-        </View>
 
-        {/* Social Sign In */}
-        <View style={styles.socialButtons}>
-          <TouchableOpacity
-            style={[
-              styles.socialButton,
-              { backgroundColor: '#FFFFFF', borderColor: '#DADCE0' },
-            ]}
-            onPress={() => handleSocialSignIn('google')}
-            disabled={isAuthenticating}
-          >
-            <View style={styles.socialButtonContent}>
-              <Ionicons name="logo-google" size={20} color="#4285F4" />
-              <Text style={[styles.socialButtonText, { color: '#3C4043' }]}>
-                Continue with Google
-              </Text>
-            </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[
-              styles.socialButton,
-              { backgroundColor: '#000000', borderColor: '#000000' },
-            ]}
-            onPress={() => handleSocialSignIn('apple')}
-            disabled={isAuthenticating}
-          >
-            <View style={styles.socialButtonContent}>
-              <Ionicons name="logo-apple" size={20} color="#FFFFFF" />
-              <Text style={[styles.socialButtonText, { color: '#FFFFFF' }]}>
-                Continue with Apple
-              </Text>
-            </View>
-          </TouchableOpacity>
-        </View>
-
-        {/* Divider */}
-        <View style={styles.dividerContainer}>
-          <View style={[styles.divider, { backgroundColor: colors.border }]} />
-          <Text style={[styles.dividerText, { color: colors.textTertiary }]}>
-            or
-          </Text>
-          <View style={[styles.divider, { backgroundColor: colors.border }]} />
-        </View>
-
-        {/* Email Form */}
-        <View style={styles.form}>
-          <View style={styles.inputContainer}>
-            <Text style={[styles.inputLabel, { color: colors.textSecondary }]}>
-              Email
-            </Text>
-            <TextInput
+            {/* Demo Credentials Box */}
+            <View
               style={[
-                styles.input,
-                {
-                  backgroundColor: colors.card,
-                  borderColor: colors.border,
-                  color: colors.textPrimary,
-                },
+                styles.demoBox,
+                { backgroundColor: colors.card, borderColor: colors.primary },
               ]}
-              value={email}
-              onChangeText={setEmail}
-              placeholder="Enter your email"
-              placeholderTextColor={colors.muted}
-              keyboardType="email-address"
-              autoCapitalize="none"
-              autoCorrect={false}
-              editable={!isAuthenticating}
-            />
-          </View>
-
-          <View style={styles.inputContainer}>
-            <Text style={[styles.inputLabel, { color: colors.textSecondary }]}>
-              Password
-            </Text>
-            <TextInput
-              style={[
-                styles.input,
-                {
-                  backgroundColor: colors.card,
-                  borderColor: colors.border,
-                  color: colors.textPrimary,
-                },
-              ]}
-              value={password}
-              onChangeText={setPassword}
-              placeholder="Enter your password"
-              placeholderTextColor={colors.muted}
-              secureTextEntry
-              editable={!isAuthenticating}
-            />
-          </View>
-
-          <TouchableOpacity
-            style={[
-              styles.signInButton,
-              {
-                backgroundColor: colors.primary,
-                opacity: isAuthenticating ? 0.7 : 1,
-              },
-            ]}
-            onPress={handleEmailSignIn}
-            disabled={isAuthenticating || !email || !password}
-          >
-            <Text
-              style={[styles.signInButtonText, { color: colors.textInverse }]}
             >
-              {isAuthenticating ? 'Signing In...' : 'Sign In'}
-            </Text>
-          </TouchableOpacity>
-        </View>
+              <Text style={[styles.demoTitle, { color: colors.primary }]}>🎉 Demo Credentials</Text>
+              <Text style={[styles.demoText, { color: colors.textSecondary }]}>
+                Email: demo@waytrove.com
+              </Text>
+              <Text style={[styles.demoText, { color: colors.textSecondary }]}>
+                Password: demo123
+              </Text>
+            </View>
+          </View>
 
-        {/* Footer */}
-        <View style={styles.footer}>
-          <TouchableOpacity>
-            <Text style={[styles.forgotPassword, { color: colors.primary }]}>
-              Forgot Password?
-            </Text>
-          </TouchableOpacity>
+          {/* Social Sign In */}
+          <View style={styles.socialButtons}>
+            <TouchableOpacity
+              style={[styles.socialButton, { backgroundColor: '#FFFFFF', borderColor: '#DADCE0' }]}
+              onPress={() => handleSocialSignIn('google')}
+              disabled={isAuthenticating}
+            >
+              <View style={styles.socialButtonContent}>
+                <Ionicons name="logo-google" size={20} color="#4285F4" />
+                <Text style={[styles.socialButtonText, { color: '#3C4043' }]}>
+                  Continue with Google
+                </Text>
+              </View>
+            </TouchableOpacity>
 
-          <Text style={[styles.signUpPrompt, { color: colors.textSecondary }]}>
-            Don't have an account?{' '}
-            <Text style={[styles.signUpLink, { color: colors.primary }]}>
-              Sign Up
+            <TouchableOpacity
+              style={[styles.socialButton, { backgroundColor: '#000000', borderColor: '#000000' }]}
+              onPress={() => handleSocialSignIn('apple')}
+              disabled={isAuthenticating}
+            >
+              <View style={styles.socialButtonContent}>
+                <Ionicons name="logo-apple" size={20} color="#FFFFFF" />
+                <Text style={[styles.socialButtonText, { color: '#FFFFFF' }]}>
+                  Continue with Apple
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+
+          {/* Divider */}
+          <View style={styles.dividerContainer}>
+            <View style={[styles.divider, { backgroundColor: colors.border }]} />
+            <Text style={[styles.dividerText, { color: colors.textTertiary }]}>or</Text>
+            <View style={[styles.divider, { backgroundColor: colors.border }]} />
+          </View>
+
+          {/* Email Form */}
+          <View style={styles.form}>
+            <View style={styles.inputContainer}>
+              <Text style={[styles.inputLabel, { color: colors.textSecondary }]}>Email</Text>
+              <TextInput
+                style={[
+                  styles.input,
+                  {
+                    backgroundColor: colors.card,
+                    borderColor: colors.border,
+                    color: colors.textPrimary,
+                  },
+                ]}
+                value={email}
+                onChangeText={setEmail}
+                placeholder="Enter your email"
+                placeholderTextColor={colors.muted}
+                keyboardType="email-address"
+                autoCapitalize="none"
+                autoCorrect={false}
+                editable={!isAuthenticating}
+              />
+            </View>
+
+            <View style={styles.inputContainer}>
+              <Text style={[styles.inputLabel, { color: colors.textSecondary }]}>Password</Text>
+              <TextInput
+                style={[
+                  styles.input,
+                  {
+                    backgroundColor: colors.card,
+                    borderColor: colors.border,
+                    color: colors.textPrimary,
+                  },
+                ]}
+                value={password}
+                onChangeText={setPassword}
+                placeholder="Enter your password"
+                placeholderTextColor={colors.muted}
+                secureTextEntry
+                editable={!isAuthenticating}
+              />
+            </View>
+
+            <TouchableOpacity
+              style={[
+                styles.signInButton,
+                {
+                  backgroundColor: colors.primary,
+                  opacity: isAuthenticating ? 0.7 : 1,
+                },
+              ]}
+              onPress={handleEmailSignIn}
+              disabled={isAuthenticating || !email || !password}
+            >
+              <Text style={[styles.signInButtonText, { color: colors.textInverse }]}>
+                {isAuthenticating ? 'Signing In...' : 'Sign In'}
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* Footer */}
+          <View style={styles.footer}>
+            <TouchableOpacity onPress={() => navigation.navigate('ForgotPassword')}>
+              <Text style={[styles.forgotPassword, { color: colors.primary }]}>
+                Forgot Password?
+              </Text>
+            </TouchableOpacity>
+
+            <Text style={[styles.signUpPrompt, { color: colors.textSecondary }]}>
+              Don't have an account?{' '}
+              <Text
+                style={[styles.signUpLink, { color: colors.primary }]}
+                onPress={() => (navigation as any).navigate('Auth', { screen: 'Register' })}
+              >
+                Sign Up
+              </Text>
             </Text>
-          </Text>
-        </View>
+          </View>
+        </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );

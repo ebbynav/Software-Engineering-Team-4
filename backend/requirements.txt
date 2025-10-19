@@ -1,0 +1,16 @@
+Django>=4.2,<5
+psycopg2-binary>=2.9
+gunicorn
+graphql-core>=3.2
+graphene-django>=3.0
+django-environ>=0.10.0
+django-storages[boto3]>=1.13
+boto3>=1.26
+geojson
+django-cors-headers
+django-debug-toolbar
+django-postgres-extra
+djangorestframework>=3.14
+djangorestframework-simplejwt>=5.2
+
+# PostGIS dependencies are OS-level (libgeos, libgdal) and Postgres with PostGIS extension must be installed on the server.

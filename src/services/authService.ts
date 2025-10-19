@@ -10,6 +10,27 @@
 /**
  * User object shape returned from authentication endpoints
  */
+/**
+ * Register a new user account
+ *
+ * @param email - User's email address
+ * @param password - User's password (min 8 chars, must include uppercase, lowercase, number)
+ * @param username - Unique username (3-20 chars, alphanumeric + underscore)
+ * @param fullName - User's full name
+ * @returns User object and authentication tokens
+ *
+ * TODO: Backend Integration
+ * - Endpoint: POST /auth/register
+ * - Request body: { email: string, password: string, username: string, fullName: string }
+ * - Response: { error: false, message: "Registration successful", data: { user: User, tokens: AuthTokens } }
+ * - Error codes:
+ *   - 400: Validation error (weak password, invalid email, etc.)
+ *   - 409: Email or username already exists
+ * - Backend should send verification email
+ * - Auto-login user after successful registration
+ */
+import { post } from './apiService';
+
 export interface User {
   id: string;
   email: string;
@@ -59,46 +80,54 @@ export interface AuthTokens {
  * - Store user object in global state/context
  */
 export async function login(_email: string, _password: string) {
-  // TODO: Replace with actual API call
-  // return post<{ user: User; tokens: AuthTokens }>('/auth/login', { email, password });
+  try {
+    const graphqlMutation = `mutation Login($input: LoginInput!) {\n  login(input: $input) {\n    user { id email username fullName }\n    tokens { accessToken refreshToken expiresIn }\n  }\n}`;
 
-  throw new Error('login() not implemented - connect to backend endpoint');
+    const variables = { input: { email: _email, password: _password } };
+    const res = await post('/graphql', { query: graphqlMutation, variables });
+    return res.data;
+  } catch (err) {
+    // Fallback to REST-style endpoint
+    try {
+      const res = await post('/auth/login', { email: _email, password: _password });
+      return res.data;
+    } catch (err2) {
+      throw err2;
+    }
+  }
 }
 
-/**
- * Register a new user account
- *
- * @param email - User's email address
- * @param password - User's password (min 8 chars, must include uppercase, lowercase, number)
- * @param username - Unique username (3-20 chars, alphanumeric + underscore)
- * @param fullName - User's full name
- * @returns User object and authentication tokens
- *
- * TODO: Backend Integration
- * - Endpoint: POST /auth/register
- * - Request body: { email: string, password: string, username: string, fullName: string }
- * - Response: { error: false, message: "Registration successful", data: { user: User, tokens: AuthTokens } }
- * - Error codes:
- *   - 400: Validation error (weak password, invalid email, etc.)
- *   - 409: Email or username already exists
- * - Backend should send verification email
- * - Auto-login user after successful registration
- */
 export async function register(
-  _email: string,
-  _password: string,
-  _username: string,
-  _fullName: string
+  email: string,
+  password: string,
+  username: string,
+  fullName: string
 ) {
-  // TODO: Replace with actual API call
-  // return post<{ user: User; tokens: AuthTokens }>('/auth/register', {
-  //   email,
-  //   password,
-  //   username,
-  //   fullName,
-  // });
+  // Prefer GraphQL mutation if backend exposes /graphql
+  try {
+    const graphqlMutation = `mutation Register($input: RegisterInput!) {\n  register(input: $input) {\n    user { id email username fullName }\n    tokens { accessToken refreshToken expiresIn }\n  }\n}`;
 
-  throw new Error('register() not implemented - connect to backend endpoint');
+    const variables = {
+      input: {
+        email,
+        password,
+        username,
+        fullName,
+      },
+    };
+
+    const res = await post('/graphql', { query: graphqlMutation, variables });
+    return res.data;
+  } catch (err) {
+    // Fallback to REST-style endpoint
+    try {
+      const res = await post('/auth/register', { email, password, username, fullName });
+      return res.data;
+    } catch (err2) {
+      // If both fail, surface original error
+      throw err2;
+    }
+  }
 }
 
 /**
@@ -142,9 +171,7 @@ export async function refreshAccessToken(_refreshToken: string) {
   // TODO: Replace with actual API call
   // return post<{ tokens: AuthTokens }>('/auth/refresh', { refreshToken });
 
-  throw new Error(
-    'refreshAccessToken() not implemented - connect to backend endpoint'
-  );
+  throw new Error('refreshAccessToken() not implemented - connect to backend endpoint');
 }
 
 /**
@@ -164,9 +191,7 @@ export async function getCurrentUser() {
   // TODO: Replace with actual API call
   // return get<{ user: User }>('/auth/me');
 
-  throw new Error(
-    'getCurrentUser() not implemented - connect to backend endpoint'
-  );
+  throw new Error('getCurrentUser() not implemented - connect to backend endpoint');
 }
 
 /**
@@ -189,9 +214,7 @@ export async function updateProfile(_userId: string, _updates: Partial<User>) {
   // TODO: Replace with actual API call
   // return put<{ user: User }>('/auth/profile', updates);
 
-  throw new Error(
-    'updateProfile() not implemented - connect to backend endpoint'
-  );
+  throw new Error('updateProfile() not implemented - connect to backend endpoint');
 }
 
 /**
@@ -208,12 +231,16 @@ export async function updateProfile(_userId: string, _updates: Partial<User>) {
  * - Return success even if email not found (security best practice)
  */
 export async function forgotPassword(_email: string) {
-  // TODO: Replace with actual API call
-  // return post('/auth/forgot-password', { email });
-
-  throw new Error(
-    'forgotPassword() not implemented - connect to backend endpoint'
-  );
+  try {
+    // Try GraphQL forgotPassword mutation first
+    const gql = `mutation ForgotPassword($email: String!) {\n  forgotPassword(email: $email) { success message }\n}`;
+    await post('/graphql', { query: gql, variables: { email: _email } });
+    return { success: true };
+  } catch (err) {
+    // Fallback to REST endpoint
+    const res = await post('/auth/forgot-password', { email: _email });
+    return res.data;
+  }
 }
 
 /**
@@ -236,9 +263,7 @@ export async function resetPassword(_token: string, _newPassword: string) {
   // TODO: Replace with actual API call
   // return post('/auth/reset-password', { token, newPassword });
 
-  throw new Error(
-    'resetPassword() not implemented - connect to backend endpoint'
-  );
+  throw new Error('resetPassword() not implemented - connect to backend endpoint');
 }
 
 /**
@@ -259,7 +284,5 @@ export async function verifyEmail(_token: string) {
   // TODO: Replace with actual API call
   // return post('/auth/verify-email', { token });
 
-  throw new Error(
-    'verifyEmail() not implemented - connect to backend endpoint'
-  );
+  throw new Error('verifyEmail() not implemented - connect to backend endpoint');
 }

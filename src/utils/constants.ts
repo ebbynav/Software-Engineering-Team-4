@@ -15,6 +15,7 @@ export const STORAGE_KEYS = {
   AUTH: '@waytrove_auth',
   HAS_SEEN_ONBOARDING: '@waytrove_has_seen_onboarding',
   USER_PROFILE: '@waytrove_user_profile',
+  AUTH_TOKENS: '@waytrove_auth_tokens',
 } as const;
 
 // API Configuration

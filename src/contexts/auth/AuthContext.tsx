@@ -13,6 +13,7 @@
 import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { STORAGE_KEYS } from '../../utils/constants';
+import * as authService from '../../services/authService';
 
 // User object structure as specified
 export interface User {
@@ -203,18 +204,36 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
       if (method === 'email') {
         const emailPayload = payload as EmailSignInPayload;
-        // Basic email validation for mock
         if (!emailPayload.email || !emailPayload.password) {
           throw new Error('Email and password are required');
         }
 
-        // Demo credentials for testing
+        // Try backend login if authService.login implemented
+        if (authService.login && typeof authService.login === 'function') {
+          const resp = await authService.login(emailPayload.email, emailPayload.password);
+          // Expect resp to include tokens and user
+          if (resp && (resp as any).tokens) {
+            await AsyncStorage.setItem(
+              STORAGE_KEYS.AUTH_TOKENS,
+              JSON.stringify((resp as any).tokens)
+            );
+          }
+          if (resp && (resp as any).user) {
+            setUser((resp as any).user as User);
+          }
+
+          // Persist auth flag
+          await AsyncStorage.setItem(STORAGE_KEYS.AUTH, 'true');
+          setIsAuthenticating(false);
+          return;
+        }
+
+        // Fall back to demo credentials for local testing
         const DEMO_CREDENTIALS = {
           email: 'demo@waytrove.com',
           password: 'demo123',
         };
 
-        // Check if demo credentials are used
         if (
           emailPayload.email !== DEMO_CREDENTIALS.email ||
           emailPayload.password !== DEMO_CREDENTIALS.password
@@ -222,18 +241,19 @@ export function AuthProvider({ children }: AuthProviderProps) {
           throw new Error('Invalid credentials. Use demo@waytrove.com / demo123');
         }
 
-        // TODO: Replace with actual API call
-        console.log('Mock email sign-in:', emailPayload.email);
+        const mockUser = getMockUser('email');
+        setUser(mockUser);
+
+        // Persist auth flag (not user data for security)
+        await AsyncStorage.setItem(STORAGE_KEYS.AUTH, 'true');
+      } else {
+        // Social and other flows: still mock for now
+        const mockUser = getMockUser(method);
+        setUser(mockUser);
+        await AsyncStorage.setItem(STORAGE_KEYS.AUTH, 'true');
       }
 
-      // Generate mock user based on sign-in method
-      const mockUser = getMockUser(method);
-      setUser(mockUser);
-
-      // Persist auth flag (not user data for security)
-      await AsyncStorage.setItem(STORAGE_KEYS.AUTH, 'true');
-
-      console.log(`Mock ${method} sign-in successful for:`, mockUser.name);
+      console.log(`Mock ${method} sign-in successful`);
     } catch (error) {
       console.error('Sign-in failed:', error);
       throw error;
@@ -247,21 +267,30 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setIsAuthenticating(true);
 
     try {
-      // Simulate network delay
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Try backend register if available
+      if (authService.register && typeof authService.register === 'function') {
+        const resp = await authService.register(payload.email, payload.password, '', payload.name);
+        // If backend returned tokens, persist them
+        if (resp && (resp as any).tokens) {
+          await AsyncStorage.setItem(
+            STORAGE_KEYS.AUTH_TOKENS,
+            JSON.stringify((resp as any).tokens)
+          );
+        }
+        if (resp && (resp as any).user) {
+          setUser((resp as any).user as User);
+        }
+        await AsyncStorage.setItem(STORAGE_KEYS.AUTH, 'true');
+        setIsAuthenticating(false);
+        return;
+      }
 
-      // TODO: Replace with actual sign-up flow:
-      // - POST to Django endpoint: /auth/register
-      // - Payload: { name: string, email: string, password: string, city?: string, interests?: string[] }
-      // - Expected response: { user: User, accessToken: string, refreshToken: string }
-      // - Handle email verification flow if required
-
-      // Basic validation for mock
+      // Fallback mock
+      await new Promise(resolve => setTimeout(resolve, 1000));
       if (!payload.name || !payload.email || !payload.password) {
         throw new Error('Name, email, and password are required');
       }
 
-      // Create mock user from sign-up data
       const newUser: User = {
         id: `signup_${Date.now()}`,
         name: payload.name,
@@ -272,10 +301,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       };
 
       setUser(newUser);
-
-      // Persist auth flag
       await AsyncStorage.setItem(STORAGE_KEYS.AUTH, 'true');
-
       console.log('Mock sign-up successful for:', newUser.name);
     } catch (error) {
       console.error('Sign-up failed:', error);

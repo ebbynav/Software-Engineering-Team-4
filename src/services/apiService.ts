@@ -26,10 +26,11 @@ import axios, {
   AxiosError,
 } from 'axios';
 import { Alert } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { STORAGE_KEYS } from '../utils/constants';
 
 // Base URL from environment variable (fallback to localhost for development)
-const API_BASE_URL =
-  process.env.EXPO_PUBLIC_API_BASE_URL || 'http://localhost:3000/api';
+const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL || 'http://localhost:3000/api';
 
 /**
  * Standard API Error Envelope
@@ -78,12 +79,19 @@ const apiClient: AxiosInstance = axios.create({
  */
 apiClient.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
-    // TODO: Retrieve auth token from secure storage
-    // Example: const token = await AsyncStorage.getItem('authToken');
-    const authToken = null; // Placeholder - replace with actual token retrieval
-
-    if (authToken && config.headers) {
-      config.headers.Authorization = `Bearer ${authToken}`;
+    // Retrieve auth token from AsyncStorage (AUTH_TOKENS)
+    try {
+      const tokenJson = await AsyncStorage.getItem(STORAGE_KEYS.AUTH_TOKENS);
+      if (tokenJson) {
+        const parsed = JSON.parse(tokenJson) as { accessToken?: string };
+        const authToken = parsed?.accessToken;
+        if (authToken && config.headers) {
+          config.headers.Authorization = `Bearer ${authToken}`;
+        }
+      }
+    } catch (e) {
+      // ignore token retrieval errors
+      if (__DEV__) console.warn('Failed to read auth token from storage', e);
     }
 
     // Log requests in development mode
@@ -125,11 +133,7 @@ apiClient.interceptors.response.use(
 
     // If backend already sends envelope format, return as-is
     // Otherwise, wrap response in success envelope
-    if (
-      response.data &&
-      typeof response.data === 'object' &&
-      'error' in response.data
-    ) {
+    if (response.data && typeof response.data === 'object' && 'error' in response.data) {
       return response;
     }
 
@@ -166,11 +170,7 @@ apiClient.interceptors.response.use(
       const responseData = error.response.data;
 
       // If backend sends error envelope, use it
-      if (
-        responseData &&
-        typeof responseData === 'object' &&
-        'message' in responseData
-      ) {
+      if (responseData && typeof responseData === 'object' && 'message' in responseData) {
         errorEnvelope.message = responseData.message || errorEnvelope.message;
         errorEnvelope.data = responseData.data;
       } else {
@@ -184,8 +184,7 @@ apiClient.interceptors.response.use(
             // TODO: Clear auth token and redirect to login
             break;
           case 403:
-            errorEnvelope.message =
-              'Access denied. You do not have permission.';
+            errorEnvelope.message = 'Access denied. You do not have permission.';
             break;
           case 404:
             errorEnvelope.message = 'Resource not found.';
@@ -194,8 +193,7 @@ apiClient.interceptors.response.use(
             errorEnvelope.message = 'Server error. Please try again later.';
             break;
           case 503:
-            errorEnvelope.message =
-              'Service unavailable. Please try again later.';
+            errorEnvelope.message = 'Service unavailable. Please try again later.';
             break;
           default:
             errorEnvelope.message = `Request failed with status ${status}`;
@@ -256,11 +254,7 @@ export async function post<T = any>(
   data?: any,
   config?: AxiosRequestConfig
 ): Promise<ApiSuccessEnvelope<T>> {
-  const response = await apiClient.post<ApiSuccessEnvelope<T>>(
-    url,
-    data,
-    config
-  );
+  const response = await apiClient.post<ApiSuccessEnvelope<T>>(url, data, config);
   return response.data;
 }
 
@@ -277,11 +271,7 @@ export async function put<T = any>(
   data?: any,
   config?: AxiosRequestConfig
 ): Promise<ApiSuccessEnvelope<T>> {
-  const response = await apiClient.put<ApiSuccessEnvelope<T>>(
-    url,
-    data,
-    config
-  );
+  const response = await apiClient.put<ApiSuccessEnvelope<T>>(url, data, config);
   return response.data;
 }
 
@@ -298,11 +288,7 @@ export async function patch<T = any>(
   data?: any,
   config?: AxiosRequestConfig
 ): Promise<ApiSuccessEnvelope<T>> {
-  const response = await apiClient.patch<ApiSuccessEnvelope<T>>(
-    url,
-    data,
-    config
-  );
+  const response = await apiClient.patch<ApiSuccessEnvelope<T>>(url, data, config);
   return response.data;
 }
 

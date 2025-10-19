@@ -19,6 +19,7 @@ export { default as SafetyScreen } from './SafetyScreen';
 export { default as NewsScreen } from './NewsScreen';
 export { default as ProfileScreen } from './ProfileScreen';
 export { default as EditProfile } from './EditProfile';
+export { default as ChangePassword } from './ChangePassword';
 
 // Modal/Detail Screens
 export { default as RouteDetailsScreen } from './RouteDetailsScreen';

@@ -181,6 +181,7 @@ export type ProfileStackParamList = {
   };
 
   EditProfile: undefined;
+  ChangePassword: undefined;
 
   MyRoutes: {
     filter?: 'created' | 'completed' | 'saved';
@@ -221,10 +222,7 @@ export type DeepLinkConfig = {
         | string
         | {
             path: string;
-            parse?: Record<
-              string,
-              (value: string) => string | number | boolean
-            >;
+            parse?: Record<string, (value: string) => string | number | boolean>;
           };
     };
   };

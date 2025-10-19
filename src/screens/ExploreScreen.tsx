@@ -14,15 +14,7 @@
  */
 
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-  FlatList,
-  Alert,
-} from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useThemeColors } from '../contexts/theme/ThemeContext';
 import { ThemeToggle, PillChip, RouteCard } from '../components';
@@ -55,18 +47,14 @@ export default function ExploreScreen() {
     if (safetyFilter === 'high') {
       filtered = filtered.filter(item => item.safetyScore >= 90);
     } else if (safetyFilter === 'medium') {
-      filtered = filtered.filter(
-        item => item.safetyScore >= 70 && item.safetyScore < 90
-      );
+      filtered = filtered.filter(item => item.safetyScore >= 70 && item.safetyScore < 90);
     }
 
     // Apply distance filter
     if (distanceFilter === 'near') {
       filtered = filtered.filter(item => item.distanceMeters < 2000);
     } else if (distanceFilter === 'medium') {
-      filtered = filtered.filter(
-        item => item.distanceMeters >= 2000 && item.distanceMeters < 5000
-      );
+      filtered = filtered.filter(item => item.distanceMeters >= 2000 && item.distanceMeters < 5000);
     } else if (distanceFilter === 'far') {
       filtered = filtered.filter(item => item.distanceMeters >= 5000);
     }
@@ -104,9 +92,7 @@ export default function ExploreScreen() {
 
   const handleSaveToggle = (itemId: string) => {
     setItems(prevItems =>
-      prevItems.map(item =>
-        item.id === itemId ? { ...item, isSaved: !item.isSaved } : item
-      )
+      prevItems.map(item => (item.id === itemId ? { ...item, isSaved: !item.isSaved } : item))
     );
   };
 
@@ -124,45 +110,22 @@ export default function ExploreScreen() {
     return mins === 0 ? `${hours}h` : `${hours}h ${mins}m`;
   };
 
-  const renderItem = ({ item }: { item: ExploreItem }) => (
-    <View style={styles.routeCardWrapper}>
-      <RouteCard
-        title={item.title}
-        distance={formatDistance(item.distanceMeters)}
-        duration={formatDuration(item.estimatedMinutes)}
-        tags={item.tags}
-        mapPreview={item.thumbnailUrl}
-        isSaved={item.isSaved}
-        onPress={() => handleRoutePress(item)}
-        onToggleSave={() => handleSaveToggle(item.id)}
-      />
-    </View>
-  );
-
   return (
-    <SafeAreaView
-      style={[styles.container, { backgroundColor: colors.background }]}
-    >
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       {/* Header */}
       <View style={styles.header}>
-        <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>
-          Explore
-        </Text>
+        <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Explore</Text>
         <ThemeToggle size={20} />
       </View>
 
-      <ScrollView 
+      <ScrollView
         style={styles.scrollContainer}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
       >
         {/* Sticky Filter Chips */}
-        <View
-          style={[styles.filterContainer, { backgroundColor: colors.background }]}
-        >
-          <Text style={[styles.filterLabel, { color: colors.textSecondary }]}>
-            Category
-          </Text>
+        <View style={[styles.filterContainer, { backgroundColor: colors.background }]}>
+          <Text style={[styles.filterLabel, { color: colors.textSecondary }]}>Category</Text>
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
@@ -195,77 +158,71 @@ export default function ExploreScreen() {
             />
           </ScrollView>
 
-          <Text style={[styles.filterLabel, { color: colors.textSecondary }]}>
-            Safety
-          </Text>
+          <Text style={[styles.filterLabel, { color: colors.textSecondary }]}>Safety</Text>
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
             contentContainerStyle={styles.filterRow}
           >
-          <PillChip
-            label="All"
-            selected={safetyFilter === 'all'}
-            onToggle={() => handleSafetyChange('all')}
-          />
-          <PillChip
-            label="High (90+)"
-            selected={safetyFilter === 'high'}
-            onToggle={() => handleSafetyChange('high')}
-          />
-          <PillChip
-            label="Medium (70+)"
-            selected={safetyFilter === 'medium'}
-            onToggle={() => handleSafetyChange('medium')}
-          />
-        </ScrollView>
+            <PillChip
+              label="All"
+              selected={safetyFilter === 'all'}
+              onToggle={() => handleSafetyChange('all')}
+            />
+            <PillChip
+              label="High (90+)"
+              selected={safetyFilter === 'high'}
+              onToggle={() => handleSafetyChange('high')}
+            />
+            <PillChip
+              label="Medium (70+)"
+              selected={safetyFilter === 'medium'}
+              onToggle={() => handleSafetyChange('medium')}
+            />
+          </ScrollView>
 
-        <Text style={[styles.filterLabel, { color: colors.textSecondary }]}>
-          Distance
-        </Text>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.filterRow}
+          <Text style={[styles.filterLabel, { color: colors.textSecondary }]}>Distance</Text>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.filterRow}
+          >
+            <PillChip
+              label="All"
+              selected={distanceFilter === 'all'}
+              onToggle={() => handleDistanceChange('all')}
+            />
+            <PillChip
+              label="Near (<2km)"
+              selected={distanceFilter === 'near'}
+              onToggle={() => handleDistanceChange('near')}
+            />
+            <PillChip
+              label="Medium (2-5km)"
+              selected={distanceFilter === 'medium'}
+              onToggle={() => handleDistanceChange('medium')}
+            />
+            <PillChip
+              label="Far (>5km)"
+              selected={distanceFilter === 'far'}
+              onToggle={() => handleDistanceChange('far')}
+            />
+          </ScrollView>
+        </View>
+
+        {/* Map Placeholder */}
+        <View
+          style={[
+            styles.mapPlaceholder,
+            { backgroundColor: colors.card, borderColor: colors.border },
+          ]}
         >
-          <PillChip
-            label="All"
-            selected={distanceFilter === 'all'}
-            onToggle={() => handleDistanceChange('all')}
-          />
-          <PillChip
-            label="Near (<2km)"
-            selected={distanceFilter === 'near'}
-            onToggle={() => handleDistanceChange('near')}
-          />
-          <PillChip
-            label="Medium (2-5km)"
-            selected={distanceFilter === 'medium'}
-            onToggle={() => handleDistanceChange('medium')}
-          />
-          <PillChip
-            label="Far (>5km)"
-            selected={distanceFilter === 'far'}
-            onToggle={() => handleDistanceChange('far')}
-          />
-        </ScrollView>
-      </View>
-
-      {/* Map Placeholder */}
-      <View
-        style={[
-          styles.mapPlaceholder,
-          { backgroundColor: colors.card, borderColor: colors.border },
-        ]}
-      >
-        <Text style={styles.mapIcon}>🗺️</Text>
-        <Text style={[styles.mapText, { color: colors.textSecondary }]}>
-          Interactive Map
-        </Text>
-        <Text style={[styles.mapSubtext, { color: colors.textTertiary }]}>
-          Map view coming soon
-        </Text>
-      </View>
+          <Text style={styles.mapIcon}>🗺️</Text>
+          <Text style={[styles.mapText, { color: colors.textSecondary }]}>Interactive Map</Text>
+          <Text style={[styles.mapSubtext, { color: colors.textTertiary }]}>
+            Map view coming soon
+          </Text>
+        </View>
 
         {/* Route List */}
         <View style={styles.listHeader}>
@@ -285,7 +242,7 @@ export default function ExploreScreen() {
             </Text>
           </View>
         ) : (
-          items.map((item) => (
+          items.map(item => (
             <View key={item.id} style={styles.routeCardWrapper}>
               <RouteCard
                 title={item.title}

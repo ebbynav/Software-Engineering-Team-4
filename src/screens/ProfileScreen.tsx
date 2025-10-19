@@ -150,7 +150,7 @@ export default function ProfileScreen() {
 
             <TouchableOpacity
               style={styles.settingItem}
-              onPress={() => handleSettingPress('Change Password')}
+              onPress={() => navigation.navigate('ChangePassword')}
             >
               <View style={styles.settingLeft}>
                 <View style={[styles.settingIcon, { backgroundColor: `${colors.warning}20` }]}>

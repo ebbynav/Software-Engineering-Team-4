@@ -10,13 +10,7 @@
  * TODO: Add biometric authentication support
  */
 
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  ReactNode,
-} from 'react';
+import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { STORAGE_KEYS } from '../../utils/constants';
 
@@ -28,6 +22,9 @@ export interface User {
   avatarUrl?: string;
   city?: string;
   interests: string[];
+  // Optional emergency contact numbers
+  primaryContact?: string;
+  secondaryContact?: string;
 }
 
 // Sign-in method types
@@ -58,6 +55,9 @@ interface AuthContextType {
   // User state
   user: User | null;
   isLoggedIn: boolean;
+
+  // Update profile helper (merge patch into user)
+  updateProfile: (patch: Partial<User>) => Promise<void>;
 
   // Authentication methods
   signInMock: (
@@ -96,15 +96,24 @@ export function AuthProvider({ children }: AuthProviderProps) {
         const authData = await AsyncStorage.getItem(STORAGE_KEYS.AUTH);
         if (authData) {
           // User is logged in, but we only store the flag
-          // User object is kept in memory only for this mock phase
-          // TODO: In production, validate token with backend and fetch fresh user data
-          setUser(getMockUser('returning')); // Mock returning user
+          // Try to load persisted user profile if present
+          const storedProfile = await AsyncStorage.getItem(STORAGE_KEYS.USER_PROFILE);
+          if (storedProfile) {
+            try {
+              const parsed = JSON.parse(storedProfile) as User;
+              setUser(parsed);
+            } catch (err) {
+              // If parsing fails, fall back to mock
+              setUser(getMockUser('returning'));
+            }
+          } else {
+            // No persisted profile; use mock returning user
+            setUser(getMockUser('returning'));
+          }
         }
 
         // Check onboarding status
-        const onboardingData = await AsyncStorage.getItem(
-          STORAGE_KEYS.HAS_SEEN_ONBOARDING
-        );
+        const onboardingData = await AsyncStorage.getItem(STORAGE_KEYS.HAS_SEEN_ONBOARDING);
         setHasSeenOnboarding(onboardingData === 'true');
       } catch (error) {
         console.warn('Failed to initialize auth state:', error);
@@ -117,9 +126,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   }, []);
 
   // Mock user data generator
-  const getMockUser = (
-    type: 'google' | 'apple' | 'email' | 'returning' = 'email'
-  ): User => {
+  const getMockUser = (type: 'google' | 'apple' | 'email' | 'returning' = 'email'): User => {
     const mockUsers = {
       google: {
         id: 'google_123456',
@@ -128,6 +135,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
         avatarUrl: 'https://lh3.googleusercontent.com/a/default-user',
         city: 'New York',
         interests: ['hiking', 'photography', 'travel', 'food'],
+        primaryContact: '+1 (555) 123-4567',
+        secondaryContact: '+1 (555) 987-6543',
       },
       apple: {
         id: 'apple_789012',
@@ -136,6 +145,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
         avatarUrl: undefined, // Apple often doesn't provide avatar
         city: 'New York',
         interests: ['architecture', 'art', 'cycling', 'coffee'],
+        primaryContact: '+1 (555) 123-4567',
+        secondaryContact: '+1 (555) 987-6543',
       },
       email: {
         id: 'email_345678',
@@ -144,20 +155,18 @@ export function AuthProvider({ children }: AuthProviderProps) {
         avatarUrl: undefined,
         city: 'New York',
         interests: ['music', 'outdoor', 'tech', 'adventure'],
+        primaryContact: '+1 (555) 123-4567',
+        secondaryContact: '+1 (555) 987-6543',
       },
       returning: {
         id: 'user_999999',
         name: 'Abhinav Sivakumar',
         email: 'taylor.smith@example.com',
-        avatarUrl:
-          'https://ui-avatars.com/api/?name=Taylor+Smith&background=6C63FF&color=fff',
+        avatarUrl: 'https://ui-avatars.com/api/?name=Taylor+Smith&background=6C63FF&color=fff',
         city: 'New York',
-        interests: [
-          'nature',
-          'backpacking',
-          'sustainable travel',
-          'local culture',
-        ],
+        interests: ['nature', 'backpacking', 'sustainable travel', 'local culture'],
+        primaryContact: '+1 (555) 123-4567',
+        secondaryContact: '+1 (555) 987-6543',
       },
     };
 
@@ -198,13 +207,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
         if (!emailPayload.email || !emailPayload.password) {
           throw new Error('Email and password are required');
         }
-        
+
         // Demo credentials for testing
         const DEMO_CREDENTIALS = {
           email: 'demo@waytrove.com',
           password: 'demo123',
         };
-        
+
         // Check if demo credentials are used
         if (
           emailPayload.email !== DEMO_CREDENTIALS.email ||
@@ -212,7 +221,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         ) {
           throw new Error('Invalid credentials. Use demo@waytrove.com / demo123');
         }
-        
+
         // TODO: Replace with actual API call
         console.log('Mock email sign-in:', emailPayload.email);
       }
@@ -289,10 +298,35 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
       // Clear user from memory
       setUser(null);
+      // Remove persisted user profile
+      await AsyncStorage.removeItem(STORAGE_KEYS.USER_PROFILE);
 
       console.log('User signed out successfully');
     } catch (error) {
       console.error('Sign-out failed:', error);
+      throw error;
+    }
+  };
+
+  // Update profile (merge patch into current user and persist minimal fields if needed)
+  const updateProfile = async (patch: Partial<User>): Promise<void> => {
+    try {
+      setUser(prev => {
+        if (!prev) return prev;
+        const updated = { ...prev, ...patch } as User;
+        // Persist updated profile to AsyncStorage for demo persistence
+        AsyncStorage.setItem(STORAGE_KEYS.USER_PROFILE, JSON.stringify(updated)).catch(e => {
+          console.warn('Failed to persist user profile:', e);
+        });
+        return updated;
+      });
+
+      // In the mock implementation we only persist the auth flag. If you want
+      // to persist user profile to AsyncStorage temporarily for demo purposes,
+      // uncomment the following lines.
+      // await AsyncStorage.setItem(STORAGE_KEYS.USER_PROFILE, JSON.stringify({ ...user, ...patch }));
+    } catch (error) {
+      console.error('Failed to update profile:', error);
       throw error;
     }
   };
@@ -314,6 +348,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     signInMock,
     signUpMock,
     signOut,
+    updateProfile,
     hasSeenOnboarding,
     markOnboardingComplete,
     isLoading,

@@ -15,6 +15,9 @@ import { MOCK_USER } from '../data/mockData';
 import { useNavigation } from '@react-navigation/native';
 import type { NavigationProp } from '@react-navigation/native';
 import type { ProfileStackParamList } from '../navigation/types';
+import { useAuth } from '../contexts/auth/AuthContext';
+import CountryPicker, { Country } from 'react-native-country-picker-modal';
+import { parsePhoneNumberFromString } from 'libphonenumber-js';
 
 export default function EditProfile() {
   const colors = useThemeColors();
@@ -25,6 +28,47 @@ export default function EditProfile() {
   const [email, setEmail] = useState(MOCK_USER.email);
   const [city, setCity] = useState(MOCK_USER.city);
   const [bio, setBio] = useState(MOCK_USER.bio || '');
+  const { user, updateProfile } = useAuth();
+
+  const [primaryContact, setPrimaryContact] = useState(user?.primaryContact ?? '');
+  const [secondaryContact, setSecondaryContact] = useState(user?.secondaryContact ?? '');
+
+  // Track country selection and national number separately for better UX
+  const [primaryCountry, setPrimaryCountry] = useState<Country | null>(null);
+  const [secondaryCountry, setSecondaryCountry] = useState<Country | null>(null);
+  const [primaryNational, setPrimaryNational] = useState('');
+  const [secondaryNational, setSecondaryNational] = useState('');
+
+  // If user has numbers in E.164 when opening, try to parse them to prefill country + national
+  React.useEffect(() => {
+    if (user?.primaryContact) {
+      const p = parsePhoneNumberFromString(user.primaryContact);
+      if (p) {
+        // minimal cast to Country to prefill picker
+        setPrimaryCountry({
+          cca2: (p.country || 'US') as any,
+          callingCode: [String(p.countryCallingCode || '')],
+          name: '',
+          cca3: '',
+        } as unknown as Country);
+        setPrimaryNational(p.nationalNumber || '');
+        setPrimaryContact(user.primaryContact);
+      }
+    }
+    if (user?.secondaryContact) {
+      const s = parsePhoneNumberFromString(user.secondaryContact);
+      if (s) {
+        setSecondaryCountry({
+          cca2: (s.country || 'US') as any,
+          callingCode: [String(s.countryCallingCode || '')],
+          name: '',
+          cca3: '',
+        } as unknown as Country);
+        setSecondaryNational(s.nationalNumber || '');
+        setSecondaryContact(user.secondaryContact);
+      }
+    }
+  }, [user]);
   const [unitsMetric, setUnitsMetric] = useState(MOCK_USER.preferences.units === 'metric');
   const [safetyAlerts, setSafetyAlerts] = useState(
     MOCK_USER.preferences.notifications.safetyAlerts
@@ -32,12 +76,53 @@ export default function EditProfile() {
 
   const handleSave = () => {
     // Mock save - in a real app this would call an API or context update
-    Alert.alert('Save Profile', 'Profile saved (mock).', [
-      {
-        text: 'OK',
-        onPress: () => navigation.goBack(),
-      },
-    ]);
+    // Validate and normalize phone numbers to E.164 using libphonenumber-js
+    try {
+      const updates: Partial<typeof user> = {};
+
+      if (primaryNational || primaryContact) {
+        // If user typed an E.164 already use it, otherwise try to build from country + national
+        let pNumber = primaryContact || '';
+        if (!pNumber && primaryCountry && primaryNational) {
+          const code = primaryCountry.callingCode?.[0] ?? '';
+          pNumber = `+${code}${primaryNational}`;
+        }
+
+        const parsed = parsePhoneNumberFromString(pNumber || '');
+        if (parsed && parsed.isValid()) {
+          updates.primaryContact = parsed.number; // E.164
+        } else if (pNumber) {
+          throw new Error('Primary contact is not a valid phone number');
+        }
+      }
+
+      if (secondaryNational || secondaryContact) {
+        let sNumber = secondaryContact || '';
+        if (!sNumber && secondaryCountry && secondaryNational) {
+          const code = secondaryCountry.callingCode?.[0] ?? '';
+          sNumber = `+${code}${secondaryNational}`;
+        }
+
+        const parsedS = parsePhoneNumberFromString(sNumber || '');
+        if (parsedS && parsedS.isValid()) {
+          updates.secondaryContact = parsedS.number;
+        } else if (sNumber) {
+          throw new Error('Secondary contact is not a valid phone number');
+        }
+      }
+
+      updateProfile(updates)
+        .then(() => {
+          Alert.alert('Save Profile', 'Profile saved (mock).', [
+            { text: 'OK', onPress: () => navigation.goBack() },
+          ]);
+        })
+        .catch(err => {
+          Alert.alert('Save Failed', String(err));
+        });
+    } catch (err) {
+      Alert.alert('Validation Error', String(err));
+    }
   };
 
   const handleCancel = () => {
@@ -54,6 +139,9 @@ export default function EditProfile() {
           setBio(MOCK_USER.bio || '');
           setUnitsMetric(MOCK_USER.preferences.units === 'metric');
           setSafetyAlerts(MOCK_USER.preferences.notifications.safetyAlerts);
+          // Reset contact fields to current user values (if any)
+          setPrimaryContact(user?.primaryContact ?? '');
+          setSecondaryContact(user?.secondaryContact ?? '');
           // Navigate back to the Profile screen after discarding
           navigation.goBack();
         },
@@ -123,6 +211,76 @@ export default function EditProfile() {
             onChangeText={setCity}
             placeholder="City"
             placeholderTextColor={colors.textTertiary}
+          />
+
+          <Text style={[styles.label, { color: colors.textSecondary }]}>Primary Contact</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+            <CountryPicker
+              countryCode={primaryCountry?.cca2 as any}
+              withCallingCode
+              withFilter
+              withFlag
+              onSelect={(c: Country) => {
+                setPrimaryCountry(c);
+              }}
+            />
+            <TextInput
+              style={[
+                styles.input,
+                { color: colors.textPrimary, borderColor: colors.border, flex: 1 },
+              ]}
+              value={primaryNational}
+              onChangeText={setPrimaryNational}
+              placeholder="Enter phone number"
+              placeholderTextColor={colors.textTertiary}
+              keyboardType="phone-pad"
+            />
+          </View>
+          <Text style={[styles.small, { color: colors.textSecondary, marginTop: 6 }]}>
+            Or paste full number (E.164) in the field below
+          </Text>
+          <TextInput
+            style={[styles.input, { color: colors.textPrimary, borderColor: colors.border }]}
+            value={primaryContact}
+            onChangeText={setPrimaryContact}
+            placeholder="+15551234567"
+            placeholderTextColor={colors.textTertiary}
+            keyboardType="phone-pad"
+          />
+
+          <Text style={[styles.label, { color: colors.textSecondary }]}>Secondary Contact</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+            <CountryPicker
+              countryCode={secondaryCountry?.cca2 as any}
+              withCallingCode
+              withFilter
+              withFlag
+              onSelect={(c: Country) => {
+                setSecondaryCountry(c);
+              }}
+            />
+            <TextInput
+              style={[
+                styles.input,
+                { color: colors.textPrimary, borderColor: colors.border, flex: 1 },
+              ]}
+              value={secondaryNational}
+              onChangeText={setSecondaryNational}
+              placeholder="Enter phone number"
+              placeholderTextColor={colors.textTertiary}
+              keyboardType="phone-pad"
+            />
+          </View>
+          <Text style={[styles.small, { color: colors.textSecondary, marginTop: 6 }]}>
+            Or paste full number (E.164) in the field below
+          </Text>
+          <TextInput
+            style={[styles.input, { color: colors.textPrimary, borderColor: colors.border }]}
+            value={secondaryContact}
+            onChangeText={setSecondaryContact}
+            placeholder="+15559876543"
+            placeholderTextColor={colors.textTertiary}
+            keyboardType="phone-pad"
           />
 
           <Text style={[styles.label, { color: colors.textSecondary }]}>Bio</Text>

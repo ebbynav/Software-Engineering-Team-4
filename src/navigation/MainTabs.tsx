@@ -133,6 +133,10 @@ function ProfileStackNavigator() {
         // Lazy require to avoid circular import at module load
         component={require('../screens/EditProfile').default}
       />
+      <ProfileStack.Screen
+        name="ChangePassword"
+        component={require('../screens/ChangePassword').default}
+      />
     </ProfileStack.Navigator>
   );
 }

@@ -14,6 +14,7 @@ import { useThemeColors } from '../contexts/theme/ThemeContext';
 import { ThemeToggle } from '../components/ThemeToggle';
 import { SAFETY_ALERTS } from '../data/mockData';
 import type { SafetyAlert } from '../data/mockData';
+import { useAuth } from '../contexts/auth/AuthContext';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -185,6 +186,10 @@ export default function SafetyScreen() {
         return 'Alert';
     }
   };
+
+  const { user } = useAuth();
+  const primary = user?.primaryContact ?? '+1 (555) 123-4567';
+  const secondary = user?.secondaryContact ?? '+1 (555) 987-6543';
 
   const calculateDistance = (lat: number, lng: number): string => {
     // Simple mock distance calculation (in real app, use user's location)
@@ -419,7 +424,7 @@ export default function SafetyScreen() {
 
           <TouchableOpacity
             style={[styles.contactCard, { backgroundColor: colors.card }]}
-            onPress={() => Alert.alert('Primary Contact', 'Calling primary contact...')}
+            onPress={() => Alert.alert('Primary Contact', `Calling ${primary}...`)}
           >
             <View style={[styles.contactIcon, { backgroundColor: `${colors.primary}20` }]}>
               <Text style={styles.contactEmoji}>👤</Text>
@@ -428,16 +433,14 @@ export default function SafetyScreen() {
               <Text style={[styles.contactName, { color: colors.textPrimary }]}>
                 Primary Contact
               </Text>
-              <Text style={[styles.contactNumber, { color: colors.textSecondary }]}>
-                +1 (555) 123-4567
-              </Text>
+              <Text style={[styles.contactNumber, { color: colors.textSecondary }]}>{primary}</Text>
             </View>
             <Text style={[styles.contactArrow, { color: colors.textTertiary }]}>→</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={[styles.contactCard, { backgroundColor: colors.card }]}
-            onPress={() => Alert.alert('Secondary Contact', 'Calling secondary contact...')}
+            onPress={() => Alert.alert('Secondary Contact', `Calling ${secondary}...`)}
           >
             <View style={[styles.contactIcon, { backgroundColor: `${colors.primary}20` }]}>
               <Text style={styles.contactEmoji}>👤</Text>
@@ -447,7 +450,7 @@ export default function SafetyScreen() {
                 Secondary Contact
               </Text>
               <Text style={[styles.contactNumber, { color: colors.textSecondary }]}>
-                +1 (555) 987-6543
+                {secondary}
               </Text>
             </View>
             <Text style={[styles.contactArrow, { color: colors.textTertiary }]}>→</Text>

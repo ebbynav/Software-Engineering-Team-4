@@ -28,6 +28,9 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { useThemeColors } from '../contexts/theme/ThemeContext';
+import { useNavigation } from '@react-navigation/native';
+import type { NavigationProp } from '@react-navigation/native';
+import type { MainTabParamList } from '../navigation/types';
 import { useAuth } from '../contexts/auth/AuthContext';
 import { ThemeToggle, SearchBar, Avatar } from '../components';
 import { FEATURED_ROUTES, MOCK_USER } from '../data/mockData';
@@ -68,6 +71,13 @@ export default function HomeScreen() {
     // TODO: Navigate to Explore with search query
   };
 
+  const navigation = useNavigation<NavigationProp<MainTabParamList>>();
+
+  const goToTab = (tab: keyof MainTabParamList) => {
+    // Navigate to the top-level tab navigator
+    navigation.navigate(tab as any);
+  };
+
   const formatDistance = (meters: number): string => {
     const km = meters / 1000;
     return km < 1 ? `${meters}m` : `${km.toFixed(1)}km`;
@@ -81,9 +91,7 @@ export default function HomeScreen() {
   };
 
   return (
-    <SafeAreaView
-      style={[styles.container, { backgroundColor: colors.background }]}
-    >
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       <ScrollView
         style={styles.content}
         showsVerticalScrollIndicator={false}
@@ -103,9 +111,7 @@ export default function HomeScreen() {
 
         {/* Greeting */}
         <View style={styles.greetingSection}>
-          <Text style={[styles.greeting, { color: colors.textSecondary }]}>
-            {getGreeting()},
-          </Text>
+          <Text style={[styles.greeting, { color: colors.textSecondary }]}>{getGreeting()},</Text>
           <Text style={[styles.userName, { color: colors.textPrimary }]}>
             {user?.name || MOCK_USER.name}
           </Text>
@@ -124,9 +130,7 @@ export default function HomeScreen() {
 
         {/* Featured Routes Carousel */}
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
-            Featured Routes
-          </Text>
+          <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>Featured Routes</Text>
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
@@ -181,37 +185,21 @@ export default function HomeScreen() {
 
         {/* 2x2 Feature Grid */}
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
-            Quick Access
-          </Text>
+          <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>Quick Access</Text>
           <View style={styles.featureGrid}>
             <TouchableOpacity
               style={[
                 styles.featureCard,
                 { backgroundColor: colors.card, borderColor: colors.border },
               ]}
-              onPress={() => console.log('Navigate to Explore')}
+              onPress={() => goToTab('ExploreTab')}
               activeOpacity={0.7}
             >
-              <View
-                style={[
-                  styles.featureIcon,
-                  { backgroundColor: colors.primaryLight },
-                ]}
-              >
+              <View style={[styles.featureIcon, { backgroundColor: colors.primaryLight }]}>
                 <Ionicons name="compass" size={28} color={colors.primary} />
               </View>
-              <Text
-                style={[styles.featureTitle, { color: colors.textPrimary }]}
-              >
-                Explore
-              </Text>
-              <Text
-                style={[
-                  styles.featureSubtitle,
-                  { color: colors.textSecondary },
-                ]}
-              >
+              <Text style={[styles.featureTitle, { color: colors.textPrimary }]}>Explore</Text>
+              <Text style={[styles.featureSubtitle, { color: colors.textSecondary }]}>
                 Discover routes
               </Text>
             </TouchableOpacity>
@@ -221,25 +209,14 @@ export default function HomeScreen() {
                 styles.featureCard,
                 { backgroundColor: colors.card, borderColor: colors.border },
               ]}
-              onPress={() => console.log('Navigate to Safety')}
+              onPress={() => goToTab('SafetyTab')}
               activeOpacity={0.7}
             >
-              <View
-                style={[styles.featureIcon, { backgroundColor: '#FEE2E2' }]}
-              >
+              <View style={[styles.featureIcon, { backgroundColor: '#FEE2E2' }]}>
                 <Ionicons name="shield-checkmark" size={28} color="#DC2626" />
               </View>
-              <Text
-                style={[styles.featureTitle, { color: colors.textPrimary }]}
-              >
-                Safety
-              </Text>
-              <Text
-                style={[
-                  styles.featureSubtitle,
-                  { color: colors.textSecondary },
-                ]}
-              >
+              <Text style={[styles.featureTitle, { color: colors.textPrimary }]}>Safety</Text>
+              <Text style={[styles.featureSubtitle, { color: colors.textSecondary }]}>
                 Stay informed
               </Text>
             </TouchableOpacity>
@@ -249,25 +226,14 @@ export default function HomeScreen() {
                 styles.featureCard,
                 { backgroundColor: colors.card, borderColor: colors.border },
               ]}
-              onPress={() => console.log('Navigate to News')}
+              onPress={() => goToTab('NewsTab')}
               activeOpacity={0.7}
             >
-              <View
-                style={[styles.featureIcon, { backgroundColor: '#DBEAFE' }]}
-              >
+              <View style={[styles.featureIcon, { backgroundColor: '#DBEAFE' }]}>
                 <Ionicons name="newspaper" size={28} color="#2563EB" />
               </View>
-              <Text
-                style={[styles.featureTitle, { color: colors.textPrimary }]}
-              >
-                News
-              </Text>
-              <Text
-                style={[
-                  styles.featureSubtitle,
-                  { color: colors.textSecondary },
-                ]}
-              >
+              <Text style={[styles.featureTitle, { color: colors.textPrimary }]}>News</Text>
+              <Text style={[styles.featureSubtitle, { color: colors.textSecondary }]}>
                 Latest updates
               </Text>
             </TouchableOpacity>
@@ -277,25 +243,14 @@ export default function HomeScreen() {
                 styles.featureCard,
                 { backgroundColor: colors.card, borderColor: colors.border },
               ]}
-              onPress={() => console.log('Navigate to Profile')}
+              onPress={() => goToTab('ProfileTab')}
               activeOpacity={0.7}
             >
-              <View
-                style={[styles.featureIcon, { backgroundColor: '#FCE7F3' }]}
-              >
+              <View style={[styles.featureIcon, { backgroundColor: '#FCE7F3' }]}>
                 <Ionicons name="person" size={28} color="#DB2777" />
               </View>
-              <Text
-                style={[styles.featureTitle, { color: colors.textPrimary }]}
-              >
-                Profile
-              </Text>
-              <Text
-                style={[
-                  styles.featureSubtitle,
-                  { color: colors.textSecondary },
-                ]}
-              >
+              <Text style={[styles.featureTitle, { color: colors.textPrimary }]}>Profile</Text>
+              <Text style={[styles.featureSubtitle, { color: colors.textSecondary }]}>
                 Your account
               </Text>
             </TouchableOpacity>

@@ -32,10 +32,7 @@ import { useThemeColors } from '../contexts/theme/ThemeContext';
 import { RootStackParamList } from '../types';
 import { ThemedTextInput, PrimaryButton } from '../components';
 
-type ForgotPasswordNavigationProp = StackNavigationProp<
-  RootStackParamList,
-  'ForgotPassword'
->;
+type ForgotPasswordNavigationProp = StackNavigationProp<RootStackParamList, 'ForgotPassword'>;
 
 const validateEmail = (email: string): string | undefined => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -92,12 +89,9 @@ export default function ForgotPasswordScreen() {
       >
         {/* Header */}
         <View style={styles.header}>
-          <Text style={[styles.title, { color: colors.textPrimary }]}>
-            Reset Password
-          </Text>
+          <Text style={[styles.title, { color: colors.textPrimary }]}>Reset Password</Text>
           <Text style={[styles.description, { color: colors.textSecondary }]}>
-            Enter your email address and we'll send you a link to reset your
-            password.
+            Enter your email address and we'll send you a link to reset your password.
           </Text>
         </View>
 
@@ -130,7 +124,7 @@ export default function ForgotPasswordScreen() {
             style={[
               styles.successBanner,
               {
-                backgroundColor: colors.success + '20',
+                backgroundColor: `${colors.success}20`,
                 borderColor: colors.success,
               },
             ]}

@@ -96,26 +96,13 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
       activeOpacity={0.7}
     >
       {/* Image */}
-      <Image
-        source={{ uri: imageUrl }}
-        style={styles.articleImage}
-        resizeMode="cover"
-      />
+      <Image source={{ uri: imageUrl }} style={styles.articleImage} resizeMode="cover" />
 
       {/* Unread indicator */}
-      {!isRead && (
-        <View
-          style={[styles.unreadBadge, { backgroundColor: colors.primary }]}
-        />
-      )}
+      {!isRead && <View style={[styles.unreadBadge, { backgroundColor: colors.primary }]} />}
 
       {/* Category badge */}
-      <View
-        style={[
-          styles.categoryBadge,
-          { backgroundColor: getCategoryColor() + '20' },
-        ]}
-      >
+      <View style={[styles.categoryBadge, { backgroundColor: `${getCategoryColor()}20` }]}>
         <Text style={[styles.categoryText, { color: getCategoryColor() }]}>
           {getCategoryLabel()}
         </Text>
@@ -132,21 +119,14 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
         >
           {title}
         </Text>
-        <Text
-          style={[styles.articleExcerpt, { color: colors.textSecondary }]}
-          numberOfLines={2}
-        >
+        <Text style={[styles.articleExcerpt, { color: colors.textSecondary }]} numberOfLines={2}>
           {excerpt}
         </Text>
 
         {/* Meta info */}
         <View style={styles.articleMeta}>
           <View style={styles.metaLeft}>
-            <Text
-              style={[styles.articleSource, { color: colors.textTertiary }]}
-            >
-              {source}
-            </Text>
+            <Text style={[styles.articleSource, { color: colors.textTertiary }]}>{source}</Text>
             <Text style={[styles.articleTime, { color: colors.textTertiary }]}>
               • {formatTimeAgo(publishedAt)}
             </Text>
@@ -157,9 +137,7 @@ const ArticleCard: React.FC<ArticleCardProps> = ({
               onPress={onToggleBookmark}
               hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
             >
-              <Text style={styles.bookmarkIcon}>
-                {isBookmarked ? '🔖' : '📑'}
-              </Text>
+              <Text style={styles.bookmarkIcon}>{isBookmarked ? '🔖' : '📑'}</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -173,9 +151,7 @@ export default function NewsScreen() {
   const [filter, setFilter] = useState<NewsFilter>('all');
   const [refreshing, setRefreshing] = useState(false);
   const [readArticles, setReadArticles] = useState<Set<string>>(new Set());
-  const [bookmarkedArticles, setBookmarkedArticles] = useState<Set<string>>(
-    new Set()
-  );
+  const [bookmarkedArticles, setBookmarkedArticles] = useState<Set<string>>(new Set());
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -212,9 +188,7 @@ export default function NewsScreen() {
     return article.category === filter;
   });
 
-  const unreadCount = filteredArticles.filter(
-    article => !readArticles.has(article.id)
-  ).length;
+  const unreadCount = filteredArticles.filter(article => !readArticles.has(article.id)).length;
 
   return (
     <SafeAreaView
@@ -224,9 +198,7 @@ export default function NewsScreen() {
       {/* Header */}
       <View style={styles.header}>
         <View>
-          <Text style={[styles.title, { color: colors.textPrimary }]}>
-            News Feed
-          </Text>
+          <Text style={[styles.title, { color: colors.textPrimary }]}>News Feed</Text>
           <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
             {unreadCount} unread {unreadCount === 1 ? 'article' : 'articles'}
           </Text>
@@ -284,9 +256,7 @@ export default function NewsScreen() {
             <Text style={[styles.emptyTitle, { color: colors.textPrimary }]}>
               No Articles Found
             </Text>
-            <Text
-              style={[styles.emptySubtitle, { color: colors.textSecondary }]}
-            >
+            <Text style={[styles.emptySubtitle, { color: colors.textSecondary }]}>
               Try changing your filter or pull to refresh
             </Text>
           </View>
@@ -298,37 +268,19 @@ export default function NewsScreen() {
                 <Text style={[styles.statValue, { color: colors.textPrimary }]}>
                   {filteredArticles.length}
                 </Text>
-                <Text
-                  style={[styles.statLabel, { color: colors.textSecondary }]}
-                >
-                  Articles
-                </Text>
+                <Text style={[styles.statLabel, { color: colors.textSecondary }]}>Articles</Text>
               </View>
-              <View
-                style={[styles.statDivider, { backgroundColor: colors.border }]}
-              />
+              <View style={[styles.statDivider, { backgroundColor: colors.border }]} />
               <View style={styles.statItem}>
-                <Text style={[styles.statValue, { color: colors.primary }]}>
-                  {unreadCount}
-                </Text>
-                <Text
-                  style={[styles.statLabel, { color: colors.textSecondary }]}
-                >
-                  Unread
-                </Text>
+                <Text style={[styles.statValue, { color: colors.primary }]}>{unreadCount}</Text>
+                <Text style={[styles.statLabel, { color: colors.textSecondary }]}>Unread</Text>
               </View>
-              <View
-                style={[styles.statDivider, { backgroundColor: colors.border }]}
-              />
+              <View style={[styles.statDivider, { backgroundColor: colors.border }]} />
               <View style={styles.statItem}>
                 <Text style={[styles.statValue, { color: colors.success }]}>
                   {bookmarkedArticles.size}
                 </Text>
-                <Text
-                  style={[styles.statLabel, { color: colors.textSecondary }]}
-                >
-                  Saved
-                </Text>
+                <Text style={[styles.statLabel, { color: colors.textSecondary }]}>Saved</Text>
               </View>
             </View>
 
@@ -355,9 +307,7 @@ export default function NewsScreen() {
               setReadArticles(prev => new Set([...prev, ...allIds]));
             }}
           >
-            <Text style={[styles.markAllText, { color: colors.primary }]}>
-              ✓ Mark all as read
-            </Text>
+            <Text style={[styles.markAllText, { color: colors.primary }]}>✓ Mark all as read</Text>
           </TouchableOpacity>
         )}
 

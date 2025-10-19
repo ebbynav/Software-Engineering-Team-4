@@ -97,16 +97,10 @@ export default function SafetyScreen() {
         Alert.alert('Emergency Call', 'Calling emergency services...');
         break;
       case 'alert-contacts':
-        Alert.alert(
-          'Alert Contacts',
-          'Emergency contacts have been notified of your situation.'
-        );
+        Alert.alert('Alert Contacts', 'Emergency contacts have been notified of your situation.');
         break;
       case 'safe-route':
-        Alert.alert(
-          'Safe Route',
-          'Finding the safest route to your destination...'
-        );
+        Alert.alert('Safe Route', 'Finding the safest route to your destination...');
         break;
     }
   };
@@ -208,9 +202,7 @@ export default function SafetyScreen() {
       {/* Header */}
       <View style={styles.header}>
         <View>
-          <Text style={[styles.title, { color: colors.textPrimary }]}>
-            Safety Companion
-          </Text>
+          <Text style={[styles.title, { color: colors.textPrimary }]}>Safety Companion</Text>
           <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
             Stay safe on your journey
           </Text>
@@ -241,9 +233,7 @@ export default function SafetyScreen() {
               <Text style={[styles.statusTitle, { color: colors.textPrimary }]}>
                 {getStatusText()}
               </Text>
-              <Text
-                style={[styles.statusSubtitle, { color: colors.textSecondary }]}
-              >
+              <Text style={[styles.statusSubtitle, { color: colors.textSecondary }]}>
                 Last updated: Just now
               </Text>
             </View>
@@ -251,21 +241,13 @@ export default function SafetyScreen() {
 
           {safetyStatus === 'alert' && (
             <TouchableOpacity
-              style={[
-                styles.cancelButton,
-                { backgroundColor: colors.error + '20' },
-              ]}
+              style={[styles.cancelButton, { backgroundColor: `${colors.error}20` }]}
               onPress={() => {
                 setSafetyStatus('safe');
-                Alert.alert(
-                  'Alert Cancelled',
-                  'Emergency alert has been cancelled.'
-                );
+                Alert.alert('Alert Cancelled', 'Emergency alert has been cancelled.');
               }}
             >
-              <Text style={[styles.cancelButtonText, { color: colors.error }]}>
-                Cancel Alert
-              </Text>
+              <Text style={[styles.cancelButtonText, { color: colors.error }]}>Cancel Alert</Text>
             </TouchableOpacity>
           )}
         </View>
@@ -287,25 +269,16 @@ export default function SafetyScreen() {
 
         {/* Quick Actions */}
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
-            Quick Actions
-          </Text>
+          <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>Quick Actions</Text>
           <View style={styles.quickActionsGrid}>
             <TouchableOpacity
               style={[styles.quickActionCard, { backgroundColor: colors.card }]}
               onPress={() => handleQuickAction('share-location')}
             >
-              <View
-                style={[
-                  styles.quickActionIcon,
-                  { backgroundColor: colors.primary + '20' },
-                ]}
-              >
+              <View style={[styles.quickActionIcon, { backgroundColor: `${colors.primary}20` }]}>
                 <Text style={styles.quickActionEmoji}>📍</Text>
               </View>
-              <Text
-                style={[styles.quickActionText, { color: colors.textPrimary }]}
-              >
+              <Text style={[styles.quickActionText, { color: colors.textPrimary }]}>
                 Share Location
               </Text>
             </TouchableOpacity>
@@ -314,17 +287,10 @@ export default function SafetyScreen() {
               style={[styles.quickActionCard, { backgroundColor: colors.card }]}
               onPress={() => handleQuickAction('call-emergency')}
             >
-              <View
-                style={[
-                  styles.quickActionIcon,
-                  { backgroundColor: '#10B981' + '20' },
-                ]}
-              >
+              <View style={[styles.quickActionIcon, { backgroundColor: '#10B981' + '20' }]}>
                 <Text style={styles.quickActionEmoji}>📞</Text>
               </View>
-              <Text
-                style={[styles.quickActionText, { color: colors.textPrimary }]}
-              >
+              <Text style={[styles.quickActionText, { color: colors.textPrimary }]}>
                 Call Emergency
               </Text>
             </TouchableOpacity>
@@ -333,17 +299,10 @@ export default function SafetyScreen() {
               style={[styles.quickActionCard, { backgroundColor: colors.card }]}
               onPress={() => handleQuickAction('alert-contacts')}
             >
-              <View
-                style={[
-                  styles.quickActionIcon,
-                  { backgroundColor: '#F59E0B' + '20' },
-                ]}
-              >
+              <View style={[styles.quickActionIcon, { backgroundColor: '#F59E0B' + '20' }]}>
                 <Text style={styles.quickActionEmoji}>👥</Text>
               </View>
-              <Text
-                style={[styles.quickActionText, { color: colors.textPrimary }]}
-              >
+              <Text style={[styles.quickActionText, { color: colors.textPrimary }]}>
                 Alert Contacts
               </Text>
             </TouchableOpacity>
@@ -352,17 +311,10 @@ export default function SafetyScreen() {
               style={[styles.quickActionCard, { backgroundColor: colors.card }]}
               onPress={() => handleQuickAction('safe-route')}
             >
-              <View
-                style={[
-                  styles.quickActionIcon,
-                  { backgroundColor: '#8B5CF6' + '20' },
-                ]}
-              >
+              <View style={[styles.quickActionIcon, { backgroundColor: '#8B5CF6' + '20' }]}>
                 <Text style={styles.quickActionEmoji}>🛡️</Text>
               </View>
-              <Text
-                style={[styles.quickActionText, { color: colors.textPrimary }]}
-              >
+              <Text style={[styles.quickActionText, { color: colors.textPrimary }]}>
                 Safe Route
               </Text>
             </TouchableOpacity>
@@ -372,21 +324,10 @@ export default function SafetyScreen() {
         {/* Live Alerts Feed */}
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
-            <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
-              Live Alerts
-            </Text>
-            <View
-              style={[
-                styles.liveBadge,
-                { backgroundColor: colors.error + '20' },
-              ]}
-            >
-              <View
-                style={[styles.liveDot, { backgroundColor: colors.error }]}
-              />
-              <Text style={[styles.liveText, { color: colors.error }]}>
-                LIVE
-              </Text>
+            <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>Live Alerts</Text>
+            <View style={[styles.liveBadge, { backgroundColor: `${colors.error}20` }]}>
+              <View style={[styles.liveDot, { backgroundColor: colors.error }]} />
+              <Text style={[styles.liveText, { color: colors.error }]}>LIVE</Text>
             </View>
           </View>
 
@@ -396,9 +337,7 @@ export default function SafetyScreen() {
               <Text style={[styles.emptyTitle, { color: colors.textPrimary }]}>
                 No Active Alerts
               </Text>
-              <Text
-                style={[styles.emptySubtitle, { color: colors.textSecondary }]}
-              >
+              <Text style={[styles.emptySubtitle, { color: colors.textSecondary }]}>
                 Your area is currently safe
               </Text>
             </View>
@@ -416,24 +355,12 @@ export default function SafetyScreen() {
               >
                 <View style={styles.alertHeader}>
                   <View style={styles.alertTitleRow}>
-                    <Text style={styles.alertIcon}>
-                      {getAlertIcon(alert.severity)}
-                    </Text>
+                    <Text style={styles.alertIcon}>{getAlertIcon(alert.severity)}</Text>
                     <View style={styles.alertTitleContainer}>
-                      <Text
-                        style={[
-                          styles.alertTitle,
-                          { color: colors.textPrimary },
-                        ]}
-                      >
+                      <Text style={[styles.alertTitle, { color: colors.textPrimary }]}>
                         {getAlertTitle(alert)}
                       </Text>
-                      <Text
-                        style={[
-                          styles.alertType,
-                          { color: getAlertColor(alert.severity) },
-                        ]}
-                      >
+                      <Text style={[styles.alertType, { color: getAlertColor(alert.severity) }]}>
                         {alert.type.toUpperCase()}
                       </Text>
                     </View>
@@ -442,48 +369,24 @@ export default function SafetyScreen() {
                     onPress={() => handleDismissAlert(alert.id)}
                     hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
                   >
-                    <Text
-                      style={[
-                        styles.dismissButton,
-                        { color: colors.textSecondary },
-                      ]}
-                    >
-                      ✕
-                    </Text>
+                    <Text style={[styles.dismissButton, { color: colors.textSecondary }]}>✕</Text>
                   </TouchableOpacity>
                 </View>
 
-                <Text
-                  style={[
-                    styles.alertDescription,
-                    { color: colors.textSecondary },
-                  ]}
-                >
+                <Text style={[styles.alertDescription, { color: colors.textSecondary }]}>
                   {alert.detailText}
                 </Text>
 
                 <View style={styles.alertFooter}>
                   <View style={styles.alertLocationRow}>
-                    <Text
-                      style={[
-                        styles.alertLocation,
-                        { color: colors.textSecondary },
-                      ]}
-                    >
+                    <Text style={[styles.alertLocation, { color: colors.textSecondary }]}>
                       📍 {alert.location}
                     </Text>
-                    <Text
-                      style={[
-                        styles.alertDistance,
-                        { color: colors.textSecondary },
-                      ]}
-                    >
+                    <Text style={[styles.alertDistance, { color: colors.textSecondary }]}>
                       {calculateDistance(alert.lat, alert.lng)}
                     </Text>
                   </View>
-                  <Text
-                    style={[styles.alertTime, { color: colors.textTertiary }]}
-                  >
+                  <Text style={[styles.alertTime, { color: colors.textTertiary }]}>
                     {formatTimeAgo(alert.timestamp)}
                   </Text>
                 </View>
@@ -502,85 +405,52 @@ export default function SafetyScreen() {
             style={[styles.contactCard, { backgroundColor: colors.card }]}
             onPress={() => Alert.alert('Emergency Services', 'Calling 911...')}
           >
-            <View
-              style={[
-                styles.contactIcon,
-                { backgroundColor: colors.error + '20' },
-              ]}
-            >
+            <View style={[styles.contactIcon, { backgroundColor: `${colors.error}20` }]}>
               <Text style={styles.contactEmoji}>🚨</Text>
             </View>
             <View style={styles.contactInfo}>
               <Text style={[styles.contactName, { color: colors.textPrimary }]}>
                 Emergency Services
               </Text>
-              <Text
-                style={[styles.contactNumber, { color: colors.textSecondary }]}
-              >
-                911
-              </Text>
+              <Text style={[styles.contactNumber, { color: colors.textSecondary }]}>911</Text>
             </View>
-            <Text style={[styles.contactArrow, { color: colors.textTertiary }]}>
-              →
-            </Text>
+            <Text style={[styles.contactArrow, { color: colors.textTertiary }]}>→</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={[styles.contactCard, { backgroundColor: colors.card }]}
-            onPress={() =>
-              Alert.alert('Primary Contact', 'Calling primary contact...')
-            }
+            onPress={() => Alert.alert('Primary Contact', 'Calling primary contact...')}
           >
-            <View
-              style={[
-                styles.contactIcon,
-                { backgroundColor: colors.primary + '20' },
-              ]}
-            >
+            <View style={[styles.contactIcon, { backgroundColor: `${colors.primary}20` }]}>
               <Text style={styles.contactEmoji}>👤</Text>
             </View>
             <View style={styles.contactInfo}>
               <Text style={[styles.contactName, { color: colors.textPrimary }]}>
                 Primary Contact
               </Text>
-              <Text
-                style={[styles.contactNumber, { color: colors.textSecondary }]}
-              >
+              <Text style={[styles.contactNumber, { color: colors.textSecondary }]}>
                 +1 (555) 123-4567
               </Text>
             </View>
-            <Text style={[styles.contactArrow, { color: colors.textTertiary }]}>
-              →
-            </Text>
+            <Text style={[styles.contactArrow, { color: colors.textTertiary }]}>→</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={[styles.contactCard, { backgroundColor: colors.card }]}
-            onPress={() =>
-              Alert.alert('Secondary Contact', 'Calling secondary contact...')
-            }
+            onPress={() => Alert.alert('Secondary Contact', 'Calling secondary contact...')}
           >
-            <View
-              style={[
-                styles.contactIcon,
-                { backgroundColor: colors.primary + '20' },
-              ]}
-            >
+            <View style={[styles.contactIcon, { backgroundColor: `${colors.primary}20` }]}>
               <Text style={styles.contactEmoji}>👤</Text>
             </View>
             <View style={styles.contactInfo}>
               <Text style={[styles.contactName, { color: colors.textPrimary }]}>
                 Secondary Contact
               </Text>
-              <Text
-                style={[styles.contactNumber, { color: colors.textSecondary }]}
-              >
+              <Text style={[styles.contactNumber, { color: colors.textSecondary }]}>
                 +1 (555) 987-6543
               </Text>
             </View>
-            <Text style={[styles.contactArrow, { color: colors.textTertiary }]}>
-              →
-            </Text>
+            <Text style={[styles.contactArrow, { color: colors.textTertiary }]}>→</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>

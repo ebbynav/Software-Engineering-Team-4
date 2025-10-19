@@ -37,11 +37,7 @@ const POST_TYPE_ICONS: Record<PostType, string> = {
   Adoption: '🐾',
 };
 
-export default function CreatePostModal({
-  visible,
-  onClose,
-  onPostCreated,
-}: CreatePostModalProps) {
+export default function CreatePostModal({ visible, onClose, onPostCreated }: CreatePostModalProps) {
   const colors = useThemeColors();
   const [selectedType, setSelectedType] = useState<PostType>('Post');
   const [content, setContent] = useState('');
@@ -116,11 +112,7 @@ export default function CreatePostModal({
   };
 
   return (
-    <Modal
-      visible={visible}
-      animationType="slide"
-      presentationStyle="pageSheet"
-    >
+    <Modal visible={visible} animationType="slide" presentationStyle="pageSheet">
       <SafeAreaView
         style={[styles.container, { backgroundColor: colors.background }]}
         edges={['top']}
@@ -128,23 +120,15 @@ export default function CreatePostModal({
         {/* Header */}
         <View style={[styles.header, { borderBottomColor: colors.border }]}>
           <TouchableOpacity onPress={handleCancel} style={styles.headerButton}>
-            <Text
-              style={[styles.headerButtonText, { color: colors.textSecondary }]}
-            >
-              Cancel
-            </Text>
+            <Text style={[styles.headerButtonText, { color: colors.textSecondary }]}>Cancel</Text>
           </TouchableOpacity>
-          <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>
-            Create Post
-          </Text>
+          <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Create Post</Text>
           <TouchableOpacity
             onPress={handlePost}
             style={[
               styles.postButton,
               {
-                backgroundColor: content.trim()
-                  ? colors.primary
-                  : colors.border,
+                backgroundColor: content.trim() ? colors.primary : colors.border,
               },
             ]}
             disabled={!content.trim()}
@@ -163,12 +147,7 @@ export default function CreatePostModal({
         <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
           {/* Post Type Selector - Pill Menu */}
           <View style={styles.typeSelector}>
-            <Text
-              style={[
-                styles.typeSelectorLabel,
-                { color: colors.textSecondary },
-              ]}
-            >
+            <Text style={[styles.typeSelectorLabel, { color: colors.textSecondary }]}>
               Post Type
             </Text>
             <ScrollView
@@ -183,25 +162,18 @@ export default function CreatePostModal({
                   style={[
                     styles.typePill,
                     {
-                      backgroundColor:
-                        selectedType === type ? colors.primary : colors.card,
-                      borderColor:
-                        selectedType === type ? colors.primary : colors.border,
+                      backgroundColor: selectedType === type ? colors.primary : colors.card,
+                      borderColor: selectedType === type ? colors.primary : colors.border,
                     },
                   ]}
                   onPress={() => setSelectedType(type)}
                 >
-                  <Text style={styles.typePillIcon}>
-                    {POST_TYPE_ICONS[type]}
-                  </Text>
+                  <Text style={styles.typePillIcon}>{POST_TYPE_ICONS[type]}</Text>
                   <Text
                     style={[
                       styles.typePillText,
                       {
-                        color:
-                          selectedType === type
-                            ? '#FFFFFF'
-                            : colors.textPrimary,
+                        color: selectedType === type ? '#FFFFFF' : colors.textPrimary,
                       },
                     ]}
                   >
@@ -216,9 +188,7 @@ export default function CreatePostModal({
           <View style={styles.inputSection}>
             <View style={styles.authorRow}>
               <Text style={styles.authorAvatar}>👤</Text>
-              <Text style={[styles.authorName, { color: colors.textPrimary }]}>
-                You
-              </Text>
+              <Text style={[styles.authorName, { color: colors.textPrimary }]}>You</Text>
             </View>
             <TextInput
               style={[styles.textInput, { color: colors.textPrimary }]}
@@ -238,7 +208,7 @@ export default function CreatePostModal({
             style={[
               styles.imagePickerButton,
               {
-                backgroundColor: hasImage ? colors.success + '20' : colors.card,
+                backgroundColor: hasImage ? `${colors.success}20` : colors.card,
                 borderColor: hasImage ? colors.success : colors.border,
               },
             ]}
@@ -246,23 +216,14 @@ export default function CreatePostModal({
           >
             <Text style={styles.imagePickerIcon}>{hasImage ? '🖼️' : '📷'}</Text>
             <View style={styles.imagePickerText}>
-              <Text
-                style={[styles.imagePickerTitle, { color: colors.textPrimary }]}
-              >
+              <Text style={[styles.imagePickerTitle, { color: colors.textPrimary }]}>
                 {hasImage ? 'Image Added' : 'Add Photo'}
               </Text>
-              <Text
-                style={[
-                  styles.imagePickerSubtitle,
-                  { color: colors.textSecondary },
-                ]}
-              >
+              <Text style={[styles.imagePickerSubtitle, { color: colors.textSecondary }]}>
                 {hasImage ? 'Tap to remove' : 'Share a photo with your post'}
               </Text>
             </View>
-            <Text
-              style={[styles.imagePickerArrow, { color: colors.textTertiary }]}
-            >
+            <Text style={[styles.imagePickerArrow, { color: colors.textTertiary }]}>
               {hasImage ? '✓' : '›'}
             </Text>
           </TouchableOpacity>
@@ -277,12 +238,7 @@ export default function CreatePostModal({
                 {selectedType === 'Question' && 'Ask a Question'}
                 {selectedType === 'Adoption' && 'Find Pet Homes'}
               </Text>
-              <Text
-                style={[
-                  styles.infoDescription,
-                  { color: colors.textSecondary },
-                ]}
-              >
+              <Text style={[styles.infoDescription, { color: colors.textSecondary }]}>
                 {selectedType === 'Post' &&
                   'Share thoughts, photos, and updates with your community'}
                 {selectedType === 'Poll' &&
@@ -297,37 +253,17 @@ export default function CreatePostModal({
 
           {/* Preview Section */}
           {content.trim().length > 0 && (
-            <View
-              style={[styles.previewCard, { backgroundColor: colors.card }]}
-            >
-              <Text
-                style={[styles.previewLabel, { color: colors.textSecondary }]}
-              >
-                Preview
-              </Text>
+            <View style={[styles.previewCard, { backgroundColor: colors.card }]}>
+              <Text style={[styles.previewLabel, { color: colors.textSecondary }]}>Preview</Text>
               <View style={styles.previewHeader}>
                 <Text style={styles.previewAvatar}>👤</Text>
                 <View>
-                  <Text
-                    style={[
-                      styles.previewAuthor,
-                      { color: colors.textPrimary },
-                    ]}
-                  >
-                    You
-                  </Text>
+                  <Text style={[styles.previewAuthor, { color: colors.textPrimary }]}>You</Text>
                   <View style={styles.previewMeta}>
-                    <Text
-                      style={[styles.previewType, { color: colors.primary }]}
-                    >
+                    <Text style={[styles.previewType, { color: colors.primary }]}>
                       {POST_TYPE_ICONS[selectedType]} {selectedType}
                     </Text>
-                    <Text
-                      style={[
-                        styles.previewTime,
-                        { color: colors.textTertiary },
-                      ]}
-                    >
+                    <Text style={[styles.previewTime, { color: colors.textTertiary }]}>
                       • Just now
                     </Text>
                   </View>
@@ -340,12 +276,7 @@ export default function CreatePostModal({
                 {content}
               </Text>
               {hasImage && (
-                <View
-                  style={[
-                    styles.previewImage,
-                    { backgroundColor: colors.border },
-                  ]}
-                >
+                <View style={[styles.previewImage, { backgroundColor: colors.border }]}>
                   <Text style={styles.previewImageText}>🖼️ Image Preview</Text>
                 </View>
               )}

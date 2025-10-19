@@ -106,10 +106,7 @@ export default function RouteDetailsScreen({ route, navigation }: Props) {
       duration: 5000,
       useNativeDriver: false,
     }).start(() => {
-      Alert.alert(
-        'Route Complete!',
-        'You have completed this route. Great job!'
-      );
+      Alert.alert('Route Complete!', 'You have completed this route. Great job!');
       setIsNavigating(false);
       setNavigationProgress(0);
       progressAnim.setValue(0);
@@ -184,31 +181,18 @@ export default function RouteDetailsScreen({ route, navigation }: Props) {
     >
       {/* Header */}
       <View
-        style={[
-          styles.header,
-          { backgroundColor: colors.card, borderBottomColor: colors.border },
-        ]}
+        style={[styles.header, { backgroundColor: colors.card, borderBottomColor: colors.border }]}
       >
-        <TouchableOpacity
-          onPress={() => navigation.goBack()}
-          style={styles.backButton}
-        >
-          <Text style={[styles.backText, { color: colors.primary }]}>
-            ‹ Back
-          </Text>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+          <Text style={[styles.backText, { color: colors.primary }]}>‹ Back</Text>
         </TouchableOpacity>
-        <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>
-          Route Details
-        </Text>
+        <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Route Details</Text>
         <TouchableOpacity onPress={handleSave}>
           <Text style={styles.saveIcon}>{isSaved ? '🔖' : '📑'}</Text>
         </TouchableOpacity>
       </View>
 
-      <ScrollView
-        style={styles.scrollView}
-        showsVerticalScrollIndicator={false}
-      >
+      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         {/* Banner Image */}
         <View style={styles.bannerContainer}>
           <Image
@@ -216,9 +200,7 @@ export default function RouteDetailsScreen({ route, navigation }: Props) {
             style={styles.bannerImage}
             resizeMode="cover"
           />
-          <View
-            style={[styles.bannerOverlay, { backgroundColor: colors.overlay }]}
-          >
+          <View style={[styles.bannerOverlay, { backgroundColor: colors.overlay }]}>
             <Text style={styles.bannerTitle}>Historic Paris Walking Tour</Text>
             <Text style={styles.bannerSubtitle}>Downtown • Cultural Route</Text>
           </View>
@@ -228,36 +210,20 @@ export default function RouteDetailsScreen({ route, navigation }: Props) {
         <View style={[styles.statsRow, { backgroundColor: colors.card }]}>
           <View style={styles.statItem}>
             <Text style={styles.statIcon}>📏</Text>
-            <Text style={[styles.statValue, { color: colors.textPrimary }]}>
-              5.2 km
-            </Text>
-            <Text style={[styles.statLabel, { color: colors.textSecondary }]}>
-              Distance
-            </Text>
+            <Text style={[styles.statValue, { color: colors.textPrimary }]}>5.2 km</Text>
+            <Text style={[styles.statLabel, { color: colors.textSecondary }]}>Distance</Text>
           </View>
-          <View
-            style={[styles.statDivider, { backgroundColor: colors.border }]}
-          />
+          <View style={[styles.statDivider, { backgroundColor: colors.border }]} />
           <View style={styles.statItem}>
             <Text style={styles.statIcon}>⏱️</Text>
-            <Text style={[styles.statValue, { color: colors.textPrimary }]}>
-              2h 30m
-            </Text>
-            <Text style={[styles.statLabel, { color: colors.textSecondary }]}>
-              Duration
-            </Text>
+            <Text style={[styles.statValue, { color: colors.textPrimary }]}>2h 30m</Text>
+            <Text style={[styles.statLabel, { color: colors.textSecondary }]}>Duration</Text>
           </View>
-          <View
-            style={[styles.statDivider, { backgroundColor: colors.border }]}
-          />
+          <View style={[styles.statDivider, { backgroundColor: colors.border }]} />
           <View style={styles.statItem}>
             <Text style={styles.statIcon}>⛰️</Text>
-            <Text style={[styles.statValue, { color: colors.textPrimary }]}>
-              45m
-            </Text>
-            <Text style={[styles.statLabel, { color: colors.textSecondary }]}>
-              Elevation
-            </Text>
+            <Text style={[styles.statValue, { color: colors.textPrimary }]}>45m</Text>
+            <Text style={[styles.statLabel, { color: colors.textSecondary }]}>Elevation</Text>
           </View>
         </View>
 
@@ -266,16 +232,12 @@ export default function RouteDetailsScreen({ route, navigation }: Props) {
           <Text style={styles.communityIcon}>👥</Text>
           <View style={styles.communityContent}>
             <Text style={[styles.communityText, { color: colors.textPrimary }]}>
-              <Text style={{ fontWeight: '700' }}>120 people</Text> completed
-              this route last week
+              <Text style={{ fontWeight: '700' }}>120 people</Text> completed this route last week
             </Text>
             <View style={styles.likeRow}>
               <TouchableOpacity onPress={handleLike} activeOpacity={0.7}>
                 <Animated.Text
-                  style={[
-                    styles.likeButton,
-                    { transform: [{ scale: likeScaleAnim }] },
-                  ]}
+                  style={[styles.likeButton, { transform: [{ scale: likeScaleAnim }] }]}
                 >
                   {isLiked ? '❤️' : '🤍'}
                 </Animated.Text>
@@ -289,20 +251,11 @@ export default function RouteDetailsScreen({ route, navigation }: Props) {
 
         {/* Navigation Progress */}
         {isNavigating && (
-          <View
-            style={[styles.navigationCard, { backgroundColor: colors.card }]}
-          >
-            <Text
-              style={[styles.navigationTitle, { color: colors.textPrimary }]}
-            >
+          <View style={[styles.navigationCard, { backgroundColor: colors.card }]}>
+            <Text style={[styles.navigationTitle, { color: colors.textPrimary }]}>
               Navigation Active
             </Text>
-            <View
-              style={[
-                styles.progressBarContainer,
-                { backgroundColor: colors.border },
-              ]}
-            >
+            <View style={[styles.progressBarContainer, { backgroundColor: colors.border }]}>
               <Animated.View
                 style={[
                   styles.progressBar,
@@ -310,16 +263,11 @@ export default function RouteDetailsScreen({ route, navigation }: Props) {
                 ]}
               />
             </View>
-            <Text
-              style={[styles.progressText, { color: colors.textSecondary }]}
-            >
+            <Text style={[styles.progressText, { color: colors.textSecondary }]}>
               {Math.round(navigationProgress)}% Complete
             </Text>
             <TouchableOpacity
-              style={[
-                styles.cancelButton,
-                { backgroundColor: colors.error + '20' },
-              ]}
+              style={[styles.cancelButton, { backgroundColor: `${colors.error}20` }]}
               onPress={handleCancelNavigation}
             >
               <Text style={[styles.cancelButtonText, { color: colors.error }]}>
@@ -340,40 +288,20 @@ export default function RouteDetailsScreen({ route, navigation }: Props) {
                 <View style={styles.waypointLeft}>
                   <Text style={styles.waypointIcon}>{waypoint.icon}</Text>
                   <View style={styles.waypointInfo}>
-                    <Text
-                      style={[
-                        styles.waypointTitle,
-                        { color: colors.textPrimary },
-                      ]}
-                    >
+                    <Text style={[styles.waypointTitle, { color: colors.textPrimary }]}>
                       {waypoint.title}
                     </Text>
-                    <Text
-                      style={[
-                        styles.waypointDesc,
-                        { color: colors.textSecondary },
-                      ]}
-                    >
+                    <Text style={[styles.waypointDesc, { color: colors.textSecondary }]}>
                       {waypoint.description}
                     </Text>
                   </View>
                 </View>
-                <Text
-                  style={[
-                    styles.waypointDistance,
-                    { color: colors.textTertiary },
-                  ]}
-                >
+                <Text style={[styles.waypointDistance, { color: colors.textTertiary }]}>
                   {waypoint.distance}
                 </Text>
               </View>
               {index < MOCK_WAYPOINTS.length - 1 && (
-                <View
-                  style={[
-                    styles.waypointLine,
-                    { backgroundColor: colors.border },
-                  ]}
-                />
+                <View style={[styles.waypointLine, { backgroundColor: colors.border }]} />
               )}
             </View>
           ))}
@@ -385,9 +313,7 @@ export default function RouteDetailsScreen({ route, navigation }: Props) {
             style={[
               styles.primaryButton,
               {
-                backgroundColor: isNavigating
-                  ? colors.textSecondary
-                  : colors.primary,
+                backgroundColor: isNavigating ? colors.textSecondary : colors.primary,
               },
             ]}
             onPress={handleStartNavigation}
@@ -406,14 +332,7 @@ export default function RouteDetailsScreen({ route, navigation }: Props) {
               onPress={handleShare}
             >
               <Text style={styles.secondaryButtonIcon}>📤</Text>
-              <Text
-                style={[
-                  styles.secondaryButtonText,
-                  { color: colors.textPrimary },
-                ]}
-              >
-                Share
-              </Text>
+              <Text style={[styles.secondaryButtonText, { color: colors.textPrimary }]}>Share</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[
@@ -422,15 +341,8 @@ export default function RouteDetailsScreen({ route, navigation }: Props) {
               ]}
               onPress={handleSave}
             >
-              <Text style={styles.secondaryButtonIcon}>
-                {isSaved ? '🔖' : '📑'}
-              </Text>
-              <Text
-                style={[
-                  styles.secondaryButtonText,
-                  { color: colors.textPrimary },
-                ]}
-              >
+              <Text style={styles.secondaryButtonIcon}>{isSaved ? '🔖' : '📑'}</Text>
+              <Text style={[styles.secondaryButtonText, { color: colors.textPrimary }]}>
                 {isSaved ? 'Saved' : 'Save'}
               </Text>
             </TouchableOpacity>
@@ -460,10 +372,7 @@ export default function RouteDetailsScreen({ route, navigation }: Props) {
               multiline
             />
             <TouchableOpacity
-              style={[
-                styles.commentButton,
-                { backgroundColor: colors.primary },
-              ]}
+              style={[styles.commentButton, { backgroundColor: colors.primary }]}
               onPress={handleAddComment}
               disabled={!commentText.trim()}
             >
@@ -473,35 +382,19 @@ export default function RouteDetailsScreen({ route, navigation }: Props) {
 
           {/* Comments List */}
           {comments.map((comment, index) => (
-            <View
-              key={index}
-              style={[styles.commentItem, { borderTopColor: colors.border }]}
-            >
+            <View key={index} style={[styles.commentItem, { borderTopColor: colors.border }]}>
               <View style={styles.commentHeader}>
                 <Text style={styles.commentAvatar}>👤</Text>
                 <View style={styles.commentMeta}>
-                  <Text
-                    style={[
-                      styles.commentAuthor,
-                      { color: colors.textPrimary },
-                    ]}
-                  >
+                  <Text style={[styles.commentAuthor, { color: colors.textPrimary }]}>
                     {index === 0 && commentText ? 'You' : 'Traveler'}
                   </Text>
-                  <Text
-                    style={[styles.commentTime, { color: colors.textTertiary }]}
-                  >
-                    {index === 0 && commentText
-                      ? 'Just now'
-                      : `${index + 1}d ago`}
+                  <Text style={[styles.commentTime, { color: colors.textTertiary }]}>
+                    {index === 0 && commentText ? 'Just now' : `${index + 1}d ago`}
                   </Text>
                 </View>
               </View>
-              <Text
-                style={[styles.commentText, { color: colors.textSecondary }]}
-              >
-                {comment}
-              </Text>
+              <Text style={[styles.commentText, { color: colors.textSecondary }]}>{comment}</Text>
             </View>
           ))}
         </View>

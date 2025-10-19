@@ -1,23 +1,19 @@
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-  Alert,
-  Switch,
-} from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, Switch } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useThemeColors } from '../contexts/theme/ThemeContext';
 import { useAuth } from '../contexts/auth/AuthContext';
 import { ThemeToggle } from '../components/ThemeToggle';
 import { Avatar } from '../components/Avatar';
 import { MOCK_USER } from '../data/mockData';
+import { useNavigation } from '@react-navigation/native';
+import type { NavigationProp } from '@react-navigation/native';
+import type { ProfileStackParamList } from '../navigation/types';
 
 export default function ProfileScreen() {
   const colors = useThemeColors();
   const { signOut } = useAuth();
+  const navigation = useNavigation<NavigationProp<ProfileStackParamList>>();
   const [safetyAlerts, setSafetyAlerts] = useState(
     MOCK_USER.preferences.notifications.safetyAlerts
   );
@@ -43,7 +39,8 @@ export default function ProfileScreen() {
   };
 
   const handleEditProfile = () => {
-    Alert.alert('Edit Profile', 'Profile editing will be available soon!');
+    // Navigate to the EditProfile screen in the Profile stack
+    navigation.navigate('EditProfile');
   };
 
   const handleSettingPress = (setting: string) => {
@@ -58,9 +55,7 @@ export default function ProfileScreen() {
       {/* Header */}
       <View style={styles.header}>
         <View>
-          <Text style={[styles.title, { color: colors.textPrimary }]}>
-            Profile
-          </Text>
+          <Text style={[styles.title, { color: colors.textPrimary }]}>Profile</Text>
           <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
             Manage your account
           </Text>
@@ -92,15 +87,11 @@ export default function ProfileScreen() {
             </TouchableOpacity>
           </View>
 
-          <Text style={[styles.profileName, { color: colors.textPrimary }]}>
-            {MOCK_USER.name}
-          </Text>
+          <Text style={[styles.profileName, { color: colors.textPrimary }]}>{MOCK_USER.name}</Text>
           <Text style={[styles.profileEmail, { color: colors.textSecondary }]}>
             {MOCK_USER.email}
           </Text>
-          <Text
-            style={[styles.profileLocation, { color: colors.textSecondary }]}
-          >
+          <Text style={[styles.profileLocation, { color: colors.textSecondary }]}>
             📍 {MOCK_USER.city}
           </Text>
 
@@ -117,164 +108,94 @@ export default function ProfileScreen() {
             <Text style={[styles.statNumber, { color: colors.primary }]}>
               {MOCK_USER.stats.routesCreated}
             </Text>
-            <Text style={[styles.statLabel, { color: colors.textSecondary }]}>
-              Routes Created
-            </Text>
+            <Text style={[styles.statLabel, { color: colors.textSecondary }]}>Routes Created</Text>
           </View>
           <View style={[styles.statCard, { backgroundColor: colors.card }]}>
             <Text style={[styles.statNumber, { color: colors.success }]}>
               {MOCK_USER.stats.savedRoutes}
             </Text>
-            <Text style={[styles.statLabel, { color: colors.textSecondary }]}>
-              Saved Routes
-            </Text>
+            <Text style={[styles.statLabel, { color: colors.textSecondary }]}>Saved Routes</Text>
           </View>
           <View style={[styles.statCard, { backgroundColor: colors.card }]}>
             <Text style={[styles.statNumber, { color: colors.accent }]}>
               {MOCK_USER.stats.followers}
             </Text>
-            <Text style={[styles.statLabel, { color: colors.textSecondary }]}>
-              Followers
-            </Text>
+            <Text style={[styles.statLabel, { color: colors.textSecondary }]}>Followers</Text>
           </View>
           <View style={[styles.statCard, { backgroundColor: colors.card }]}>
             <Text style={[styles.statNumber, { color: colors.info }]}>
               {MOCK_USER.stats.following}
             </Text>
-            <Text style={[styles.statLabel, { color: colors.textSecondary }]}>
-              Following
-            </Text>
+            <Text style={[styles.statLabel, { color: colors.textSecondary }]}>Following</Text>
           </View>
         </View>
 
         {/* Account Section */}
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
-            Account
-          </Text>
+          <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>Account</Text>
           <View style={[styles.settingsCard, { backgroundColor: colors.card }]}>
-            <TouchableOpacity
-              style={styles.settingItem}
-              onPress={() => handleSettingPress('Edit Profile')}
-            >
+            <TouchableOpacity style={styles.settingItem} onPress={handleEditProfile}>
               <View style={styles.settingLeft}>
-                <View
-                  style={[
-                    styles.settingIcon,
-                    { backgroundColor: colors.primary + '20' },
-                  ]}
-                >
+                <View style={[styles.settingIcon, { backgroundColor: `${colors.primary}20` }]}>
                   <Text style={styles.settingEmoji}>👤</Text>
                 </View>
-                <Text
-                  style={[styles.settingText, { color: colors.textPrimary }]}
-                >
+                <Text style={[styles.settingText, { color: colors.textPrimary }]}>
                   Edit Profile
                 </Text>
               </View>
-              <Text
-                style={[styles.settingArrow, { color: colors.textTertiary }]}
-              >
-                ›
-              </Text>
+              <Text style={[styles.settingArrow, { color: colors.textTertiary }]}>›</Text>
             </TouchableOpacity>
 
-            <View
-              style={[
-                styles.settingDivider,
-                { backgroundColor: colors.border },
-              ]}
-            />
+            <View style={[styles.settingDivider, { backgroundColor: colors.border }]} />
 
             <TouchableOpacity
               style={styles.settingItem}
               onPress={() => handleSettingPress('Change Password')}
             >
               <View style={styles.settingLeft}>
-                <View
-                  style={[
-                    styles.settingIcon,
-                    { backgroundColor: colors.warning + '20' },
-                  ]}
-                >
+                <View style={[styles.settingIcon, { backgroundColor: `${colors.warning}20` }]}>
                   <Text style={styles.settingEmoji}>🔒</Text>
                 </View>
-                <Text
-                  style={[styles.settingText, { color: colors.textPrimary }]}
-                >
+                <Text style={[styles.settingText, { color: colors.textPrimary }]}>
                   Change Password
                 </Text>
               </View>
-              <Text
-                style={[styles.settingArrow, { color: colors.textTertiary }]}
-              >
-                ›
-              </Text>
+              <Text style={[styles.settingArrow, { color: colors.textTertiary }]}>›</Text>
             </TouchableOpacity>
 
-            <View
-              style={[
-                styles.settingDivider,
-                { backgroundColor: colors.border },
-              ]}
-            />
+            <View style={[styles.settingDivider, { backgroundColor: colors.border }]} />
 
             <TouchableOpacity
               style={styles.settingItem}
               onPress={() => handleSettingPress('Privacy Settings')}
             >
               <View style={styles.settingLeft}>
-                <View
-                  style={[
-                    styles.settingIcon,
-                    { backgroundColor: colors.info + '20' },
-                  ]}
-                >
+                <View style={[styles.settingIcon, { backgroundColor: `${colors.info}20` }]}>
                   <Text style={styles.settingEmoji}>🛡️</Text>
                 </View>
-                <Text
-                  style={[styles.settingText, { color: colors.textPrimary }]}
-                >
+                <Text style={[styles.settingText, { color: colors.textPrimary }]}>
                   Privacy Settings
                 </Text>
               </View>
-              <Text
-                style={[styles.settingArrow, { color: colors.textTertiary }]}
-              >
-                ›
-              </Text>
+              <Text style={[styles.settingArrow, { color: colors.textTertiary }]}>›</Text>
             </TouchableOpacity>
           </View>
         </View>
 
         {/* Notifications Section */}
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
-            Notifications
-          </Text>
+          <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>Notifications</Text>
           <View style={[styles.settingsCard, { backgroundColor: colors.card }]}>
             <View style={styles.settingItem}>
               <View style={styles.settingLeft}>
-                <View
-                  style={[
-                    styles.settingIcon,
-                    { backgroundColor: colors.error + '20' },
-                  ]}
-                >
+                <View style={[styles.settingIcon, { backgroundColor: `${colors.error}20` }]}>
                   <Text style={styles.settingEmoji}>🚨</Text>
                 </View>
                 <View style={styles.settingTextContainer}>
-                  <Text
-                    style={[styles.settingText, { color: colors.textPrimary }]}
-                  >
+                  <Text style={[styles.settingText, { color: colors.textPrimary }]}>
                     Safety Alerts
                   </Text>
-                  <Text
-                    style={[
-                      styles.settingSubtext,
-                      { color: colors.textSecondary },
-                    ]}
-                  >
+                  <Text style={[styles.settingSubtext, { color: colors.textSecondary }]}>
                     Get notified about safety issues
                   </Text>
                 </View>
@@ -284,41 +205,24 @@ export default function ProfileScreen() {
                 onValueChange={setSafetyAlerts}
                 trackColor={{
                   false: colors.border,
-                  true: colors.primary + '80',
+                  true: `${colors.primary}80`,
                 }}
                 thumbColor={safetyAlerts ? colors.primary : colors.textTertiary}
               />
             </View>
 
-            <View
-              style={[
-                styles.settingDivider,
-                { backgroundColor: colors.border },
-              ]}
-            />
+            <View style={[styles.settingDivider, { backgroundColor: colors.border }]} />
 
             <View style={styles.settingItem}>
               <View style={styles.settingLeft}>
-                <View
-                  style={[
-                    styles.settingIcon,
-                    { backgroundColor: colors.accent + '20' },
-                  ]}
-                >
+                <View style={[styles.settingIcon, { backgroundColor: `${colors.accent}20` }]}>
                   <Text style={styles.settingEmoji}>🗺️</Text>
                 </View>
                 <View style={styles.settingTextContainer}>
-                  <Text
-                    style={[styles.settingText, { color: colors.textPrimary }]}
-                  >
+                  <Text style={[styles.settingText, { color: colors.textPrimary }]}>
                     Route Updates
                   </Text>
-                  <Text
-                    style={[
-                      styles.settingSubtext,
-                      { color: colors.textSecondary },
-                    ]}
-                  >
+                  <Text style={[styles.settingSubtext, { color: colors.textSecondary }]}>
                     Updates on saved routes
                   </Text>
                 </View>
@@ -328,41 +232,24 @@ export default function ProfileScreen() {
                 onValueChange={setRouteUpdates}
                 trackColor={{
                   false: colors.border,
-                  true: colors.primary + '80',
+                  true: `${colors.primary}80`,
                 }}
                 thumbColor={routeUpdates ? colors.primary : colors.textTertiary}
               />
             </View>
 
-            <View
-              style={[
-                styles.settingDivider,
-                { backgroundColor: colors.border },
-              ]}
-            />
+            <View style={[styles.settingDivider, { backgroundColor: colors.border }]} />
 
             <View style={styles.settingItem}>
               <View style={styles.settingLeft}>
-                <View
-                  style={[
-                    styles.settingIcon,
-                    { backgroundColor: colors.success + '20' },
-                  ]}
-                >
+                <View style={[styles.settingIcon, { backgroundColor: `${colors.success}20` }]}>
                   <Text style={styles.settingEmoji}>👥</Text>
                 </View>
                 <View style={styles.settingTextContainer}>
-                  <Text
-                    style={[styles.settingText, { color: colors.textPrimary }]}
-                  >
+                  <Text style={[styles.settingText, { color: colors.textPrimary }]}>
                     Social Activity
                   </Text>
-                  <Text
-                    style={[
-                      styles.settingSubtext,
-                      { color: colors.textSecondary },
-                    ]}
-                  >
+                  <Text style={[styles.settingSubtext, { color: colors.textSecondary }]}>
                     Followers and mentions
                   </Text>
                 </View>
@@ -372,11 +259,9 @@ export default function ProfileScreen() {
                 onValueChange={setSocialActivity}
                 trackColor={{
                   false: colors.border,
-                  true: colors.primary + '80',
+                  true: `${colors.primary}80`,
                 }}
-                thumbColor={
-                  socialActivity ? colors.primary : colors.textTertiary
-                }
+                thumbColor={socialActivity ? colors.primary : colors.textTertiary}
               />
             </View>
           </View>
@@ -384,82 +269,41 @@ export default function ProfileScreen() {
 
         {/* Preferences Section */}
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
-            Preferences
-          </Text>
+          <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>Preferences</Text>
           <View style={[styles.settingsCard, { backgroundColor: colors.card }]}>
             <TouchableOpacity
               style={styles.settingItem}
               onPress={() => handleSettingPress('Language')}
             >
               <View style={styles.settingLeft}>
-                <View
-                  style={[
-                    styles.settingIcon,
-                    { backgroundColor: colors.primary + '20' },
-                  ]}
-                >
+                <View style={[styles.settingIcon, { backgroundColor: `${colors.primary}20` }]}>
                   <Text style={styles.settingEmoji}>🌐</Text>
                 </View>
-                <Text
-                  style={[styles.settingText, { color: colors.textPrimary }]}
-                >
-                  Language
-                </Text>
+                <Text style={[styles.settingText, { color: colors.textPrimary }]}>Language</Text>
               </View>
               <View style={styles.settingRight}>
-                <Text
-                  style={[styles.settingValue, { color: colors.textSecondary }]}
-                >
-                  English
-                </Text>
-                <Text
-                  style={[styles.settingArrow, { color: colors.textTertiary }]}
-                >
-                  ›
-                </Text>
+                <Text style={[styles.settingValue, { color: colors.textSecondary }]}>English</Text>
+                <Text style={[styles.settingArrow, { color: colors.textTertiary }]}>›</Text>
               </View>
             </TouchableOpacity>
 
-            <View
-              style={[
-                styles.settingDivider,
-                { backgroundColor: colors.border },
-              ]}
-            />
+            <View style={[styles.settingDivider, { backgroundColor: colors.border }]} />
 
             <TouchableOpacity
               style={styles.settingItem}
               onPress={() => handleSettingPress('Units')}
             >
               <View style={styles.settingLeft}>
-                <View
-                  style={[
-                    styles.settingIcon,
-                    { backgroundColor: colors.accent + '20' },
-                  ]}
-                >
+                <View style={[styles.settingIcon, { backgroundColor: `${colors.accent}20` }]}>
                   <Text style={styles.settingEmoji}>📏</Text>
                 </View>
-                <Text
-                  style={[styles.settingText, { color: colors.textPrimary }]}
-                >
-                  Units
-                </Text>
+                <Text style={[styles.settingText, { color: colors.textPrimary }]}>Units</Text>
               </View>
               <View style={styles.settingRight}>
-                <Text
-                  style={[styles.settingValue, { color: colors.textSecondary }]}
-                >
-                  {MOCK_USER.preferences.units === 'metric'
-                    ? 'Metric'
-                    : 'Imperial'}
+                <Text style={[styles.settingValue, { color: colors.textSecondary }]}>
+                  {MOCK_USER.preferences.units === 'metric' ? 'Metric' : 'Imperial'}
                 </Text>
-                <Text
-                  style={[styles.settingArrow, { color: colors.textTertiary }]}
-                >
-                  ›
-                </Text>
+                <Text style={[styles.settingArrow, { color: colors.textTertiary }]}>›</Text>
               </View>
             </TouchableOpacity>
           </View>
@@ -467,75 +311,41 @@ export default function ProfileScreen() {
 
         {/* More Section */}
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
-            More
-          </Text>
+          <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>More</Text>
           <View style={[styles.settingsCard, { backgroundColor: colors.card }]}>
             <TouchableOpacity
               style={styles.settingItem}
               onPress={() => handleSettingPress('Help & Support')}
             >
               <View style={styles.settingLeft}>
-                <View
-                  style={[
-                    styles.settingIcon,
-                    { backgroundColor: colors.info + '20' },
-                  ]}
-                >
+                <View style={[styles.settingIcon, { backgroundColor: `${colors.info}20` }]}>
                   <Text style={styles.settingEmoji}>❓</Text>
                 </View>
-                <Text
-                  style={[styles.settingText, { color: colors.textPrimary }]}
-                >
+                <Text style={[styles.settingText, { color: colors.textPrimary }]}>
                   Help & Support
                 </Text>
               </View>
-              <Text
-                style={[styles.settingArrow, { color: colors.textTertiary }]}
-              >
-                ›
-              </Text>
+              <Text style={[styles.settingArrow, { color: colors.textTertiary }]}>›</Text>
             </TouchableOpacity>
 
-            <View
-              style={[
-                styles.settingDivider,
-                { backgroundColor: colors.border },
-              ]}
-            />
+            <View style={[styles.settingDivider, { backgroundColor: colors.border }]} />
 
             <TouchableOpacity
               style={styles.settingItem}
               onPress={() => handleSettingPress('About')}
             >
               <View style={styles.settingLeft}>
-                <View
-                  style={[
-                    styles.settingIcon,
-                    { backgroundColor: colors.success + '20' },
-                  ]}
-                >
+                <View style={[styles.settingIcon, { backgroundColor: `${colors.success}20` }]}>
                   <Text style={styles.settingEmoji}>ℹ️</Text>
                 </View>
-                <Text
-                  style={[styles.settingText, { color: colors.textPrimary }]}
-                >
+                <Text style={[styles.settingText, { color: colors.textPrimary }]}>
                   About WayTrove
                 </Text>
               </View>
-              <Text
-                style={[styles.settingArrow, { color: colors.textTertiary }]}
-              >
-                ›
-              </Text>
+              <Text style={[styles.settingArrow, { color: colors.textTertiary }]}>›</Text>
             </TouchableOpacity>
 
-            <View
-              style={[
-                styles.settingDivider,
-                { backgroundColor: colors.border },
-              ]}
-            />
+            <View style={[styles.settingDivider, { backgroundColor: colors.border }]} />
 
             <TouchableOpacity
               style={styles.settingItem}
@@ -543,45 +353,29 @@ export default function ProfileScreen() {
             >
               <View style={styles.settingLeft}>
                 <View
-                  style={[
-                    styles.settingIcon,
-                    { backgroundColor: colors.textSecondary + '20' },
-                  ]}
+                  style={[styles.settingIcon, { backgroundColor: `${colors.textSecondary}20` }]}
                 >
                   <Text style={styles.settingEmoji}>📄</Text>
                 </View>
-                <Text
-                  style={[styles.settingText, { color: colors.textPrimary }]}
-                >
+                <Text style={[styles.settingText, { color: colors.textPrimary }]}>
                   Terms & Privacy
                 </Text>
               </View>
-              <Text
-                style={[styles.settingArrow, { color: colors.textTertiary }]}
-              >
-                ›
-              </Text>
+              <Text style={[styles.settingArrow, { color: colors.textTertiary }]}>›</Text>
             </TouchableOpacity>
           </View>
         </View>
 
         {/* Sign Out Button */}
         <TouchableOpacity
-          style={[
-            styles.signOutButton,
-            { backgroundColor: colors.error + '15' },
-          ]}
+          style={[styles.signOutButton, { backgroundColor: `${colors.error}15` }]}
           onPress={handleSignOut}
         >
-          <Text style={[styles.signOutText, { color: colors.error }]}>
-            Sign Out
-          </Text>
+          <Text style={[styles.signOutText, { color: colors.error }]}>Sign Out</Text>
         </TouchableOpacity>
 
         {/* Version Info */}
-        <Text style={[styles.versionText, { color: colors.textTertiary }]}>
-          WayTrove v1.0.0
-        </Text>
+        <Text style={[styles.versionText, { color: colors.textTertiary }]}>WayTrove v1.0.0</Text>
 
         {/* Bottom spacing */}
         <View style={{ height: 24 }} />

@@ -96,9 +96,7 @@ export default function SafeRouteScreen({ navigation }: Props) {
     progressIntervalRef.current = setInterval(() => {
       setProgress(prev => {
         const newProgress = Math.min(prev + 25, 100);
-        const newWaypoint = Math.floor(
-          (newProgress / 100) * MOCK_WAYPOINTS.length
-        );
+        const newWaypoint = Math.floor((newProgress / 100) * MOCK_WAYPOINTS.length);
         setCurrentWaypoint(Math.min(newWaypoint, MOCK_WAYPOINTS.length - 1));
         return newProgress;
       });
@@ -114,10 +112,7 @@ export default function SafeRouteScreen({ navigation }: Props) {
     setProgress(0);
     setCurrentWaypoint(0);
     progressAnim.setValue(0);
-    Alert.alert(
-      'Navigation Cancelled',
-      'Safe route navigation has been stopped.'
-    );
+    Alert.alert('Navigation Cancelled', 'Safe route navigation has been stopped.');
   };
 
   const handleEmergency = () => {
@@ -140,26 +135,13 @@ export default function SafeRouteScreen({ navigation }: Props) {
     >
       {/* Header */}
       <View
-        style={[
-          styles.header,
-          { backgroundColor: colors.card, borderBottomColor: colors.border },
-        ]}
+        style={[styles.header, { backgroundColor: colors.card, borderBottomColor: colors.border }]}
       >
-        <TouchableOpacity
-          onPress={() => navigation.goBack()}
-          style={styles.backButton}
-        >
-          <Text style={[styles.backText, { color: colors.primary }]}>
-            ‹ Back
-          </Text>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+          <Text style={[styles.backText, { color: colors.primary }]}>‹ Back</Text>
         </TouchableOpacity>
-        <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>
-          Safe Route
-        </Text>
-        <TouchableOpacity
-          onPress={handleEmergency}
-          style={styles.emergencyButton}
-        >
+        <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>Safe Route</Text>
+        <TouchableOpacity onPress={handleEmergency} style={styles.emergencyButton}>
           <Text style={styles.emergencyIcon}>🚨</Text>
         </TouchableOpacity>
       </View>
@@ -167,9 +149,7 @@ export default function SafeRouteScreen({ navigation }: Props) {
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         {/* Map Preview Placeholder */}
         <View style={[styles.mapContainer, { backgroundColor: colors.card }]}>
-          <View
-            style={[styles.mapPlaceholder, { backgroundColor: colors.border }]}
-          >
+          <View style={[styles.mapPlaceholder, { backgroundColor: colors.border }]}>
             <Text style={styles.mapIcon}>🗺️</Text>
             <Text style={[styles.mapText, { color: colors.textSecondary }]}>
               Safe Route Map Preview
@@ -184,66 +164,35 @@ export default function SafeRouteScreen({ navigation }: Props) {
         <View style={[styles.statsCard, { backgroundColor: colors.card }]}>
           <View style={styles.stat}>
             <Text style={styles.statIcon}>📏</Text>
-            <Text style={[styles.statLabel, { color: colors.textSecondary }]}>
-              Distance
-            </Text>
-            <Text style={[styles.statValue, { color: colors.textPrimary }]}>
-              1.5 mi
-            </Text>
+            <Text style={[styles.statLabel, { color: colors.textSecondary }]}>Distance</Text>
+            <Text style={[styles.statValue, { color: colors.textPrimary }]}>1.5 mi</Text>
           </View>
-          <View
-            style={[styles.statDivider, { backgroundColor: colors.border }]}
-          />
+          <View style={[styles.statDivider, { backgroundColor: colors.border }]} />
           <View style={styles.stat}>
             <Text style={styles.statIcon}>⏱️</Text>
-            <Text style={[styles.statLabel, { color: colors.textSecondary }]}>
-              Est. Time
-            </Text>
-            <Text style={[styles.statValue, { color: colors.textPrimary }]}>
-              18 min
-            </Text>
+            <Text style={[styles.statLabel, { color: colors.textSecondary }]}>Est. Time</Text>
+            <Text style={[styles.statValue, { color: colors.textPrimary }]}>18 min</Text>
           </View>
-          <View
-            style={[styles.statDivider, { backgroundColor: colors.border }]}
-          />
+          <View style={[styles.statDivider, { backgroundColor: colors.border }]} />
           <View style={styles.stat}>
             <Text style={styles.statIcon}>🛡️</Text>
-            <Text style={[styles.statLabel, { color: colors.textSecondary }]}>
-              Safety
-            </Text>
-            <Text style={[styles.statValue, { color: colors.success }]}>
-              High
-            </Text>
+            <Text style={[styles.statLabel, { color: colors.textSecondary }]}>Safety</Text>
+            <Text style={[styles.statValue, { color: colors.success }]}>High</Text>
           </View>
         </View>
 
         {/* Navigation Progress (shown when navigating) */}
         {isNavigating && (
-          <View
-            style={[
-              styles.progressCard,
-              { backgroundColor: colors.success + '15' },
-            ]}
-          >
+          <View style={[styles.progressCard, { backgroundColor: `${colors.success}15` }]}>
             <View style={styles.progressHeader}>
               <Text style={[styles.progressTitle, { color: colors.success }]}>
                 🧭 Navigating to Destination
               </Text>
-              <TouchableOpacity
-                onPress={handleCancel}
-                style={styles.cancelButton}
-              >
-                <Text style={[styles.cancelText, { color: colors.error }]}>
-                  Cancel
-                </Text>
+              <TouchableOpacity onPress={handleCancel} style={styles.cancelButton}>
+                <Text style={[styles.cancelText, { color: colors.error }]}>Cancel</Text>
               </TouchableOpacity>
             </View>
-            <View
-              style={[
-                styles.progressBarTrack,
-                { backgroundColor: colors.border },
-              ]}
-            >
+            <View style={[styles.progressBarTrack, { backgroundColor: colors.border }]}>
               <Animated.View
                 style={[
                   styles.progressBarFill,
@@ -254,20 +203,16 @@ export default function SafeRouteScreen({ navigation }: Props) {
                 ]}
               />
             </View>
-            <Text
-              style={[styles.progressText, { color: colors.textSecondary }]}
-            >
-              {Math.round(progress)}% complete • Waypoint {currentWaypoint + 1}{' '}
-              of {MOCK_WAYPOINTS.length}
+            <Text style={[styles.progressText, { color: colors.textSecondary }]}>
+              {Math.round(progress)}% complete • Waypoint {currentWaypoint + 1} of{' '}
+              {MOCK_WAYPOINTS.length}
             </Text>
           </View>
         )}
 
         {/* Waypoints List */}
         <View style={styles.waypointsContainer}>
-          <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
-            Route Waypoints
-          </Text>
+          <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>Route Waypoints</Text>
           {MOCK_WAYPOINTS.map((waypoint, index) => {
             const isActive = isNavigating && index === currentWaypoint;
             const isCompleted = isNavigating && index < currentWaypoint;
@@ -278,9 +223,7 @@ export default function SafeRouteScreen({ navigation }: Props) {
                 style={[
                   styles.waypointCard,
                   {
-                    backgroundColor: isActive
-                      ? colors.primary + '15'
-                      : colors.card,
+                    backgroundColor: isActive ? `${colors.primary}15` : colors.card,
                     borderColor: isActive ? colors.primary : colors.border,
                   },
                 ]}
@@ -302,10 +245,7 @@ export default function SafeRouteScreen({ navigation }: Props) {
                       style={[
                         styles.waypointNumberText,
                         {
-                          color:
-                            isCompleted || isActive
-                              ? '#FFFFFF'
-                              : colors.textSecondary,
+                          color: isCompleted || isActive ? '#FFFFFF' : colors.textSecondary,
                         },
                       ]}
                     >
@@ -317,9 +257,7 @@ export default function SafeRouteScreen({ navigation }: Props) {
                       style={[
                         styles.waypointLine,
                         {
-                          backgroundColor: isCompleted
-                            ? colors.success
-                            : colors.border,
+                          backgroundColor: isCompleted ? colors.success : colors.border,
                         },
                       ]}
                     />
@@ -328,47 +266,22 @@ export default function SafeRouteScreen({ navigation }: Props) {
                 <View style={styles.waypointContent}>
                   <View style={styles.waypointHeader}>
                     <Text style={styles.waypointIcon}>{waypoint.icon}</Text>
-                    <Text
-                      style={[
-                        styles.waypointName,
-                        { color: colors.textPrimary },
-                      ]}
-                    >
+                    <Text style={[styles.waypointName, { color: colors.textPrimary }]}>
                       {waypoint.name}
                     </Text>
                   </View>
-                  <Text
-                    style={[
-                      styles.waypointAddress,
-                      { color: colors.textSecondary },
-                    ]}
-                  >
+                  <Text style={[styles.waypointAddress, { color: colors.textSecondary }]}>
                     {waypoint.address}
                   </Text>
-                  <Text
-                    style={[
-                      styles.waypointDescription,
-                      { color: colors.textTertiary },
-                    ]}
-                  >
+                  <Text style={[styles.waypointDescription, { color: colors.textTertiary }]}>
                     {waypoint.description}
                   </Text>
                   <View style={styles.waypointFooter}>
-                    <Text
-                      style={[
-                        styles.waypointDistance,
-                        { color: colors.primary },
-                      ]}
-                    >
+                    <Text style={[styles.waypointDistance, { color: colors.primary }]}>
                       📍 {waypoint.distance}
                     </Text>
                     {isActive && (
-                      <View
-                        style={[
-                          styles.activeIndicator,
-                          { backgroundColor: colors.primary },
-                        ]}
-                      >
+                      <View style={[styles.activeIndicator, { backgroundColor: colors.primary }]}>
                         <Text style={styles.activeIndicatorText}>Current</Text>
                       </View>
                     )}
@@ -387,33 +300,25 @@ export default function SafeRouteScreen({ navigation }: Props) {
           <View style={styles.featuresList}>
             <View style={styles.feature}>
               <Text style={styles.featureIcon}>💡</Text>
-              <Text
-                style={[styles.featureText, { color: colors.textSecondary }]}
-              >
+              <Text style={[styles.featureText, { color: colors.textSecondary }]}>
                 Well-lit streets preferred
               </Text>
             </View>
             <View style={styles.feature}>
               <Text style={styles.featureIcon}>👥</Text>
-              <Text
-                style={[styles.featureText, { color: colors.textSecondary }]}
-              >
+              <Text style={[styles.featureText, { color: colors.textSecondary }]}>
                 High pedestrian traffic areas
               </Text>
             </View>
             <View style={styles.feature}>
               <Text style={styles.featureIcon}>📹</Text>
-              <Text
-                style={[styles.featureText, { color: colors.textSecondary }]}
-              >
+              <Text style={[styles.featureText, { color: colors.textSecondary }]}>
                 Security cameras along route
               </Text>
             </View>
             <View style={styles.feature}>
               <Text style={styles.featureIcon}>🚓</Text>
-              <Text
-                style={[styles.featureText, { color: colors.textSecondary }]}
-              >
+              <Text style={[styles.featureText, { color: colors.textSecondary }]}>
                 Near police stations & safe zones
               </Text>
             </View>
@@ -427,38 +332,23 @@ export default function SafeRouteScreen({ navigation }: Props) {
             onPress={handleStartNavigation}
           >
             <Text style={styles.startButtonIcon}>🧭</Text>
-            <Text style={styles.startButtonText}>
-              Start Safe Route Navigation
-            </Text>
+            <Text style={styles.startButtonText}>Start Safe Route Navigation</Text>
           </TouchableOpacity>
         )}
 
         {/* Emergency Contact Card */}
-        <View
-          style={[
-            styles.emergencyCard,
-            { backgroundColor: colors.error + '15' },
-          ]}
-        >
+        <View style={[styles.emergencyCard, { backgroundColor: `${colors.error}15` }]}>
           <Text style={styles.emergencyCardIcon}>🚨</Text>
           <View style={styles.emergencyCardContent}>
             <Text style={[styles.emergencyCardTitle, { color: colors.error }]}>
               Emergency Contacts
             </Text>
-            <Text
-              style={[
-                styles.emergencyCardText,
-                { color: colors.textSecondary },
-              ]}
-            >
+            <Text style={[styles.emergencyCardText, { color: colors.textSecondary }]}>
               911 • Share Location • Alert Friends
             </Text>
           </View>
           <TouchableOpacity
-            style={[
-              styles.emergencyCardButton,
-              { backgroundColor: colors.error },
-            ]}
+            style={[styles.emergencyCardButton, { backgroundColor: colors.error }]}
             onPress={handleEmergency}
           >
             <Text style={styles.emergencyCardButtonText}>SOS</Text>

@@ -25,13 +25,7 @@ import type {
 } from './types';
 
 // Import screens
-import {
-  HomeScreen,
-  ExploreScreen,
-  SafetyScreen,
-  NewsScreen,
-  ProfileScreen,
-} from '../screens';
+import { HomeScreen, ExploreScreen, SafetyScreen, NewsScreen, ProfileScreen } from '../screens';
 
 const Tab = createBottomTabNavigator<MainTabParamList>();
 const HomeStack = createStackNavigator<HomeStackParamList>();
@@ -74,11 +68,7 @@ function ExploreStackNavigator() {
       }}
       initialRouteName="Explore"
     >
-      <ExploreStack.Screen
-        name="Explore"
-        component={ExploreScreen}
-        initialParams={{}}
-      />
+      <ExploreStack.Screen name="Explore" component={ExploreScreen} initialParams={{}} />
     </ExploreStack.Navigator>
   );
 }
@@ -137,10 +127,11 @@ function ProfileStackNavigator() {
       }}
       initialRouteName="Profile"
     >
+      <ProfileStack.Screen name="Profile" component={ProfileScreen} initialParams={{}} />
       <ProfileStack.Screen
-        name="Profile"
-        component={ProfileScreen}
-        initialParams={{}}
+        name="EditProfile"
+        // Lazy require to avoid circular import at module load
+        component={require('../screens/EditProfile').default}
       />
     </ProfileStack.Navigator>
   );
@@ -178,9 +169,7 @@ export default function MainTabs() {
         component={HomeStackNavigator}
         options={{
           tabBarLabel: 'Home',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="home" size={size} color={color} />
-          ),
+          tabBarIcon: ({ color, size }) => <Ionicons name="home" size={size} color={color} />,
         }}
       />
       <Tab.Screen
@@ -188,9 +177,7 @@ export default function MainTabs() {
         component={ExploreStackNavigator}
         options={{
           tabBarLabel: 'Explore',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="compass" size={size} color={color} />
-          ),
+          tabBarIcon: ({ color, size }) => <Ionicons name="compass" size={size} color={color} />,
         }}
       />
       <Tab.Screen
@@ -208,9 +195,7 @@ export default function MainTabs() {
         component={NewsStackNavigator}
         options={{
           tabBarLabel: 'News',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="newspaper" size={size} color={color} />
-          ),
+          tabBarIcon: ({ color, size }) => <Ionicons name="newspaper" size={size} color={color} />,
         }}
       />
       <Tab.Screen
@@ -218,13 +203,9 @@ export default function MainTabs() {
         component={ProfileStackNavigator}
         options={{
           tabBarLabel: 'Profile',
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="person" size={size} color={color} />
-          ),
+          tabBarIcon: ({ color, size }) => <Ionicons name="person" size={size} color={color} />,
         }}
       />
     </Tab.Navigator>
   );
 }
-
-

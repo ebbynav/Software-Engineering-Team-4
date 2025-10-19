@@ -56,13 +56,7 @@
  */
 
 import React, { useRef, useEffect } from 'react';
-import {
-  TouchableOpacity,
-  Text,
-  StyleSheet,
-  Animated,
-  ViewStyle,
-} from 'react-native';
+import { TouchableOpacity, Text, StyleSheet, Animated, ViewStyle } from 'react-native';
 import { useThemeColors } from '../../contexts';
 
 interface PillChipProps {
@@ -106,7 +100,7 @@ export const PillChip = React.memo<PillChipProps>(
 
     const backgroundColor = backgroundAnim.interpolate({
       inputRange: [0, 1],
-      outputRange: ['transparent', colors.primary + '20'],
+      outputRange: ['transparent', `${colors.primary}20`],
     });
 
     const borderColor = selected ? colors.primary : colors.border;

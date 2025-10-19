@@ -133,21 +133,10 @@ export const RouteCard = React.memo<RouteCardProps>(
           {/* Map Preview */}
           <View style={styles.mapContainer}>
             {mapPreview ? (
-              <Image
-                source={{ uri: mapPreview }}
-                style={styles.mapImage}
-                resizeMode="cover"
-              />
+              <Image source={{ uri: mapPreview }} style={styles.mapImage} resizeMode="cover" />
             ) : (
-              <View
-                style={[
-                  styles.mapPlaceholder,
-                  { backgroundColor: colors.border },
-                ]}
-              >
-                <Text style={[styles.mapIcon, { color: colors.textSecondary }]}>
-                  🗺️
-                </Text>
+              <View style={[styles.mapPlaceholder, { backgroundColor: colors.border }]}>
+                <Text style={[styles.mapIcon, { color: colors.textSecondary }]}>🗺️</Text>
               </View>
             )}
             {/* Save Button Overlay */}
@@ -163,26 +152,15 @@ export const RouteCard = React.memo<RouteCardProps>(
 
           {/* Content */}
           <View style={styles.content}>
-            <Text
-              style={[styles.title, { color: colors.textPrimary }]}
-              numberOfLines={2}
-            >
+            <Text style={[styles.title, { color: colors.textPrimary }]} numberOfLines={2}>
               {title}
             </Text>
 
             {/* Stats */}
             <View style={styles.stats}>
-              <Text style={[styles.stat, { color: colors.textSecondary }]}>
-                📍 {distance}
-              </Text>
-              <Text
-                style={[styles.statDivider, { color: colors.textSecondary }]}
-              >
-                •
-              </Text>
-              <Text style={[styles.stat, { color: colors.textSecondary }]}>
-                ⏱️ {duration}
-              </Text>
+              <Text style={[styles.stat, { color: colors.textSecondary }]}>📍 {distance}</Text>
+              <Text style={[styles.statDivider, { color: colors.textSecondary }]}>•</Text>
+              <Text style={[styles.stat, { color: colors.textSecondary }]}>⏱️ {duration}</Text>
             </View>
 
             {/* Tags */}
@@ -196,14 +174,9 @@ export const RouteCard = React.memo<RouteCardProps>(
                 {tags.map((tag, index) => (
                   <View
                     key={index}
-                    style={[
-                      styles.tag,
-                      { backgroundColor: colors.primary + '20' },
-                    ]}
+                    style={[styles.tag, { backgroundColor: `${colors.primary}20` }]}
                   >
-                    <Text style={[styles.tagText, { color: colors.primary }]}>
-                      {tag}
-                    </Text>
+                    <Text style={[styles.tagText, { color: colors.primary }]}>{tag}</Text>
                   </View>
                 ))}
               </ScrollView>
